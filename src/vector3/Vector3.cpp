@@ -1,0 +1,161 @@
+//
+// Created by witek on 01.03.2022.
+//
+
+#include "Vector3.h"
+#include <cmath>
+
+float Vector3::getX() const {
+    return x;
+}
+
+void Vector3::setX(float x) {
+    Vector3::x = x;
+}
+
+float Vector3::getY() const {
+    return y;
+}
+
+void Vector3::setY(float y) {
+    Vector3::y = y;
+}
+
+float Vector3::getZ() const {
+    return z;
+}
+
+void Vector3::setZ(float z) {
+    Vector3::z = z;
+}
+
+Vector3::Vector3(float x, float y, float z) : x(x), y(y), z(z) {}
+
+float Vector3::getLength() const {
+    return sqrtf(powf(this->x, 2.0f) + powf(this->y, 2.0f) + powf(this->z, 2.0f));
+}
+
+Vector3::Vector3(Vector3 v1, Vector3 v2) {
+    this->x = v2.x - v1.x;
+    this->y = v2.y - v1.y;
+    this->z = v2.z - v1.z;
+}
+
+float Vector3::getLengthSquared() const {
+    return powf(this->x, 2.0f) + powf(this->y, 2.0f) + powf(this->z, 2.0f);
+}
+
+Vector3::Vector3(Vector3 const &vector3) {
+    this->x = vector3.x;
+    this->y = vector3.y;
+    this->z = vector3.z;
+}
+
+Vector3 Vector3::sum(const Vector3 &obj) {
+    return Vector3(this->x + obj.x, this->y + obj.y, this->z + obj.z);
+}
+
+Vector3 Vector3::sub(Vector3 obj) {
+    return Vector3(this->x - obj.x, this->y - obj.y, this->z - obj.z);
+}
+
+Vector3 Vector3::multiply(float k) {
+    return Vector3(this->x * k, this->y * k, this->z * k);
+}
+
+Vector3 Vector3::div(float k) {
+    return Vector3(this->x / k, this->y / k, this->z / k);
+}
+
+Vector3 Vector3::div(Vector3 vector3) {
+    return Vector3(this->x / vector3.x, this->y / vector3.y, this->z / vector3.z);
+}
+
+Vector3 Vector3::multiply(Vector3 vector3) {
+    return Vector3(this->x * vector3.x, this->y * vector3.y, this->z * vector3.z);
+}
+
+Vector3 Vector3::multiplyVector(Vector3 vector3) {
+    return Vector3(
+            this->y * vector3.z - this->z * vector3.y,
+            this->z * vector3.x - this->x * vector3.z,
+            this->x * vector3.y - this->y * vector3.x);
+}
+
+float Vector3::multiplyScalar(const Vector3 &vector3) {
+    return (this->x * vector3.x + this->y * vector3.y + this->z * vector3.z);
+}
+
+Vector3 Vector3::operator+() {
+    return Vector3(this->x, this->y, this->z);
+}
+
+Vector3 Vector3::operator-() {
+    return Vector3(-this->x, -this->y, -this->z);
+}
+
+Vector3 Vector3::operator+(const Vector3 &obj) {
+    return sum(obj);
+}
+
+Vector3 Vector3::operator-(const Vector3 &obj) {
+    return sub(obj);
+}
+
+Vector3 Vector3::operator*(const Vector3 &obj) {
+    return multiply(obj);
+}
+
+Vector3 Vector3::operator*(float k) {
+    return multiply(k);
+}
+
+Vector3 Vector3::operator/(const Vector3 &obj) {
+    return div(obj);
+}
+
+Vector3 Vector3::operator/(float k) {
+    return div(k);
+}
+
+void Vector3::operator+=(const Vector3 &obj) {
+    Vector3 buff = sum(obj);
+    this->x = buff.x;
+    this->y = buff.y;
+    this->z = buff.z;
+}
+
+void Vector3::operator-=(const Vector3 &obj) {
+    Vector3 buff = sub(obj);
+    this->x = buff.x;
+    this->y = buff.y;
+    this->z = buff.z;
+}
+
+void Vector3::operator*=(const Vector3 &obj) {
+    Vector3 buff = multiply(obj);
+    this->x = buff.x;
+    this->y = buff.y;
+    this->z = buff.z;
+}
+
+void Vector3::operator/=(const Vector3 &obj) {
+    Vector3 buff = div(obj);
+    this->x = buff.x;
+    this->y = buff.y;
+    this->z = buff.z;
+}
+
+void Vector3::operator*=(float k) {
+    Vector3 buff = multiply(k);
+    this->x = buff.x;
+    this->y = buff.y;
+    this->z = buff.z;
+}
+
+void Vector3::operator/=(float k) {
+    Vector3 buff = div(k);
+    this->x = buff.x;
+    this->y = buff.y;
+    this->z = buff.z;
+}
