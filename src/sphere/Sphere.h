@@ -5,8 +5,9 @@
 #ifndef FOTO_SPHERE_H
 #define FOTO_SPHERE_H
 
+#include "../structure/Structure.h"
 
-class Sphere {
+class Sphere: Structure{
 
 };
 

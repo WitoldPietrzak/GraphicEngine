@@ -6,7 +6,9 @@
 #define FOTO_SURFACE_H
 
 
-class Surface {
+#include "../structure/Structure.h"
+
+class Surface: Structure {
 
 };
 

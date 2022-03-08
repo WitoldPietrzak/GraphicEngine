@@ -4,6 +4,7 @@
 
 #include "Vector3.h"
 #include <cmath>
+#include "../Exceptions/DivisionException.h"
 
 float Vector3::getX() const {
     return x;
@@ -31,31 +32,23 @@ void Vector3::setZ(float z) {
 
 Vector3::Vector3(float x, float y, float z) : x(x), y(y), z(z) {}
 
+Vector3::Vector3(const Vector3 &v1, const Vector3 &v2) : x(v2.x - v1.x), y(v2.y - v1.y), z(v2.z - v1.z) {}
+
+Vector3::Vector3(Vector3 const &vector3) : x(vector3.x), y(vector3.y), z(vector3.z) {}
+
 float Vector3::getLength() const {
     return sqrtf(powf(this->x, 2.0f) + powf(this->y, 2.0f) + powf(this->z, 2.0f));
-}
-
-Vector3::Vector3(Vector3 v1, Vector3 v2) {
-    this->x = v2.x - v1.x;
-    this->y = v2.y - v1.y;
-    this->z = v2.z - v1.z;
 }
 
 float Vector3::getLengthSquared() const {
     return powf(this->x, 2.0f) + powf(this->y, 2.0f) + powf(this->z, 2.0f);
 }
 
-Vector3::Vector3(Vector3 const &vector3) {
-    this->x = vector3.x;
-    this->y = vector3.y;
-    this->z = vector3.z;
-}
-
 Vector3 Vector3::sum(const Vector3 &obj) {
     return Vector3(this->x + obj.x, this->y + obj.y, this->z + obj.z);
 }
 
-Vector3 Vector3::sub(Vector3 obj) {
+Vector3 Vector3::sub(const Vector3 &obj) {
     return Vector3(this->x - obj.x, this->y - obj.y, this->z - obj.z);
 }
 
@@ -67,15 +60,15 @@ Vector3 Vector3::div(float k) {
     return Vector3(this->x / k, this->y / k, this->z / k);
 }
 
-Vector3 Vector3::div(Vector3 vector3) {
+Vector3 Vector3::div(const Vector3 &vector3) {
     return Vector3(this->x / vector3.x, this->y / vector3.y, this->z / vector3.z);
 }
 
-Vector3 Vector3::multiply(Vector3 vector3) {
+Vector3 Vector3::multiply(const Vector3 &vector3) {
     return Vector3(this->x * vector3.x, this->y * vector3.y, this->z * vector3.z);
 }
 
-Vector3 Vector3::multiplyVector(Vector3 vector3) {
+Vector3 Vector3::multiplyVector(const Vector3 &vector3) {
     return Vector3(
             this->y * vector3.z - this->z * vector3.y,
             this->z * vector3.x - this->x * vector3.z,
@@ -158,4 +151,21 @@ void Vector3::operator/=(float k) {
     this->x = buff.x;
     this->y = buff.y;
     this->z = buff.z;
+}
+
+bool Vector3::operator==(const Vector3 &obj) {
+    return (this->x == obj.x && this->y == obj.y && this->z == obj.z);
+
+}
+
+bool Vector3::operator!=(const Vector3 &obj) {
+    return !(this->x == obj.x && this->y == obj.y && this->z == obj.z);
+}
+
+Vector3 Vector3::normalize() {
+    float n = this->getLength();
+    if (n == 0) {
+        throw DivisionException();
+    }
+    this->div(n);
 }

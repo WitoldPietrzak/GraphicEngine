@@ -8,7 +8,7 @@
 
 #include <string>
 
-class Vector3 {
+class Vector3{
 
 private:
     float x;
@@ -32,17 +32,18 @@ public:
     float getLengthSquared() const;
 
     Vector3(float x, float y, float z);
-    Vector3(Vector3 v1, Vector3 v2);
+    Vector3(const Vector3& v1, const Vector3& v2);
     Vector3(Vector3 const &vector3);
 
     Vector3 sum(const Vector3& obj);
-    Vector3 sub(Vector3 obj);
+    Vector3 sub(const Vector3& obj);
     Vector3 multiply(float k);
-    Vector3 multiply(Vector3 vector3);
-    Vector3 multiplyVector(Vector3 vector3);
+    Vector3 multiply(const Vector3& vector3);
+    Vector3 multiplyVector(const Vector3& vector3);
     float multiplyScalar(const Vector3& vector3);
     Vector3 div(float k);
-    Vector3 div(Vector3 vector3);
+    Vector3 div(const Vector3& vector3);
+    Vector3 normalize();
 
     Vector3 operator + ();
     Vector3 operator - ();
@@ -57,6 +58,8 @@ public:
     void operator -= (const Vector3& obj);
     void operator *= (const Vector3& obj);
     void operator /= (const Vector3& obj);
+    bool operator == (const Vector3& obj);
+    bool operator != (const Vector3& obj);
     void operator *= (float k);
     void operator /= (float k);
 
