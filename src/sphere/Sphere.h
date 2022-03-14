@@ -6,20 +6,20 @@
 #define FOTO_SPHERE_H
 
 #include "../structure/Structure.h"
-#include "../Point/Point.h"
+#include "../point3/Point3.h"
 #include "../ray/Ray.h"
 
 
 class Sphere: Structure{
 
 private:
-    Point center;
+    Point3 center;
     Ray ray;
 
 public:
-    Point getCenter() const;
+    Point3 getCenter() const;
 
-    void setCenter(Point center);
+    void setCenter(Point3 center);
 
     Ray getRay() const;
 
@@ -27,9 +27,9 @@ public:
 
     int getIntersectionNumber(Ray ray) const;
 
-    Point getIntersectionPoint(Ray ray) const;
+    Point3 getIntersectionPoint(Ray ray) const;
 
-    Sphere(Point center, Ray ray);
+    Sphere(Point3 center, Ray ray);
     Sphere(const Sphere &sphere);
 
 

@@ -7,20 +7,20 @@
 
 
 #include "../structure/Structure.h"
-#include "../Point/Point.h"
+#include "../point3/Point3.h"
 #include "../vector3/Vector3.h"
 
 class Plane: Structure {
 
 private:
-    Point x;
+    Point3 x;
     Vector3 normalVector;
     float displacement;
 
 public:
-    Point getX() const;
+    Point3 getX() const;
 
-    void setX(Point x);
+    void setX(Point3 x);
 
     Vector3 getNormalVector() const;
 
@@ -30,7 +30,7 @@ public:
 
     void setDisplacement(float displacement);
 
-    Plane(Point x, Vector3 normalVector, float displacement);
+    Plane(Point3 x, Vector3 normalVector, float displacement);
 
 
 

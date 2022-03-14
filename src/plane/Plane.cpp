@@ -4,11 +4,11 @@
 
 #include "Plane.h"
 
-Point Plane::getX() const {
+Point3 Plane::getX() const {
     return x;
 }
 
-void Plane::setX(Point x) {
+void Plane::setX(Point3 x) {
     Plane::x = x;
 }
 
@@ -28,4 +28,4 @@ void Plane::setDisplacement(float displacement) {
     Plane::displacement = displacement;
 }
 
-Plane::Plane(Point x, Vector3 normalVector, float displacement) : x(x), normalVector(normalVector), displacement(displacement) {}
+Plane::Plane(Point3 x, Vector3 normalVector, float displacement) : x(x), normalVector(normalVector), displacement(displacement) {}

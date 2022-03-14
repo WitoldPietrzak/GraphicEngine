@@ -2,18 +2,18 @@
 // Created by Witek on 08.03.2022.
 //
 
-#ifndef FOTO_POINT_H
-#define FOTO_POINT_H
+#ifndef FOTO_POINT3_H
+#define FOTO_POINT3_H
 
 
-class Point {
+class Point3 {
 protected:
     float x;
     float y;
     float z;
 
 public:
-    Point(float x, float y, float z);
+    Point3(float x, float y, float z);
 
     float getX() const;
 
@@ -26,7 +26,10 @@ public:
     float getZ() const;
 
     void setZ(float z);
+
+    bool operator == (const Point3& obj);
+    bool operator != (const Point3& obj);
 };
 
 
-#endif //FOTO_POINT_H
+#endif //FOTO_POINT3_H

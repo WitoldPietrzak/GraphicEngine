@@ -5,11 +5,11 @@
 #include "Sphere.h"
 #include "../vector3/Vector3.h"
 
-Point Sphere::getCenter() const {
+Point3 Sphere::getCenter() const {
     return center;
 }
 
-void Sphere::setCenter(Point center) {
+void Sphere::setCenter(Point3 center) {
     Sphere::center = center;
 }
 
@@ -26,10 +26,10 @@ int Sphere::getIntersectionNumber(Ray ray) const {
     return intersectionNumber;
 }
 
-Point Sphere::getIntersectionPoint(Ray ray) const {
-    Point intersectionPoint = Point(0, 0, 0);
+Point3 Sphere::getIntersectionPoint(Ray ray) const {
+    Point3 intersectionPoint = Point3(0, 0, 0);
     return intersectionPoint;
 }
 
-Sphere::Sphere(Point center, Ray ray) : center(center), ray(ray) {}
+Sphere::Sphere(Point3 center, Ray ray) : center(center), ray(ray) {}
 Sphere::Sphere(const Sphere &sphere) : center(sphere.center), ray(sphere.ray) {}
