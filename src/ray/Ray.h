@@ -13,20 +13,41 @@
 class Ray {
 
 private:
-    Point3 origin;
-//    Point direction;
-//    Point destination;
-    Vector3 vector;
+
+    Vector3 origin;
+    Vector3 direction;
+    Vector3 destination = Vector3(0,0,0);
+    float distance = 0.0;
+    float tMin = 0.0;
+    float tMax = 0.0;
 public:
-    Point3 getOrigin() const;
 
-    void setOrigin(Point3 origin);
+    Vector3 getOrigin() const;
 
-    Vector3 getVector() const;
+    void setOrigin(Vector3 origin);
 
-    void setVector (Vector3 vector);
+    Vector3 getDirection() const;
 
-    Ray(Point3 origin, Vector3 vector);
+    void setDirection (Vector3 direction);
+
+    Vector3 getDestination() const;
+
+    void setDestination(Vector3 destination);
+
+    float getDistance();
+
+    void setDistance(float distance);
+
+    float getTMin() const;
+
+    void setTMin(float tMin);
+
+    float getTMax() const;
+
+    void setTMax(float tMax);
+
+    Ray(Vector3 origin, Vector3 direction);
+
     Ray(Ray const &ray);
 
 

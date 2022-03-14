@@ -5,31 +5,49 @@
 #include "Sphere.h"
 #include "../vector3/Vector3.h"
 
-Point3 Sphere::getCenter() const {
+
+Vector3 Sphere::getCenter() const {
     return center;
 }
 
-void Sphere::setCenter(Point3 center) {
+void Sphere::setCenter(Vector3 center) {
     Sphere::center = center;
 }
 
-Ray Sphere::getRay() const {
-    return ray;
+float Sphere::getRadius() const {
+    return radius;
 }
 
-void Sphere::setRay(Ray ray) {
-    Sphere::ray = ray;
+void Sphere::setRadius(float radius) {
+    Sphere::radius = radius;
 }
 
-int Sphere::getIntersectionNumber(Ray ray) const {
-    int intersectionNumber = 0;
-    return intersectionNumber;
+Point3 Sphere::getIntersectionPoints(Ray ray, Point3* intersections, float distance) const {
+    Vector3 vec1 = ray.getOrigin() - center;
+    float b = - vec1.multiplyScalar(ray.getDirection());
+    float det = (b * b) - vec1.multiplyScalar(vec1) + radius*radius;
+    if (det > 0) {
+        float sqDet = sqrtf(det);
+        float root1 = b - sqDet;
+        float root2 = b + sqDet;
+        if (root2 > 0) {
+            if (root1 < 0) {
+                if (root2 < distance) {
+                    distance = root2;
+                }
+            }
+            else {
+                if (root1 < distance) {
+                    distance = root1;
+                }
+            }
+        }
+    }
+    else
+        return* intersections;
+
 }
 
-Point3 Sphere::getIntersectionPoint(Ray ray) const {
-    Point3 intersectionPoint = Point3(0, 0, 0);
-    return intersectionPoint;
-}
+Sphere::Sphere(Vector3 center, float radius) : center(center), radius(radius) {}
+Sphere::Sphere(const Sphere &sphere) : center(sphere.center), radius(sphere.radius) {}
 
-Sphere::Sphere(Point3 center, Ray ray) : center(center), ray(ray) {}
-Sphere::Sphere(const Sphere &sphere) : center(sphere.center), ray(sphere.ray) {}

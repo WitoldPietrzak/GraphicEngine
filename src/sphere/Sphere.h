@@ -13,26 +13,24 @@
 class Sphere: Structure{
 
 private:
-    Point3 center;
-    Ray ray;
+
+    Vector3 center;
+    float radius;
 
 public:
-    Point3 getCenter() const;
+    Vector3 getCenter() const;
 
-    void setCenter(Point3 center);
+    void setCenter(Vector3 center);
 
-    Ray getRay() const;
+    float getRadius() const;
 
-    void setRay(Ray ray);
+    void setRadius(float radius);
 
-    int getIntersectionNumber(Ray ray) const;
+    Point3 getIntersectionPoints(Ray ray, Point3* intersections, float distance) const;
 
-    Point3 getIntersectionPoint(Ray ray) const;
+    Sphere(Vector3 center, float radius);
 
-    Sphere(Point3 center, Ray ray);
     Sphere(const Sphere &sphere);
-
-
 
 };
 
