@@ -162,10 +162,22 @@ bool Vector3::operator!=(const Vector3 &obj) {
     return !(this->x == obj.x && this->y == obj.y && this->z == obj.z);
 }
 
-Vector3 Vector3::normalize() {
+void Vector3::normalize() {
     float n = this->getLength();
     if (n == 0) {
         throw DivisionException();
     }
-    this->div(n);
+
+    auto result = this->div(n);
+    this->x = result.x;
+    this->y = result.y;
+    this->z = result.z;
+}
+
+Vector3 Vector3::getNormalized() {
+    float n = this->getLength();
+    if (n == 0) {
+        throw DivisionException();
+    }
+    return this->div(n);
 }

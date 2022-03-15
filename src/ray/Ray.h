@@ -8,8 +8,6 @@
 #ifndef FOTO_RAY_H
 #define FOTO_RAY_H
 
-#endif //FOTO_RAY_H
-
 class Ray {
 
 private:
@@ -50,6 +48,10 @@ public:
 
     Ray(Ray const &ray);
 
+    Vector3 getPointInDistance(float distance);
+
 
 
 };
+
+#endif //FOTO_RAY_H

@@ -5,6 +5,7 @@
 #ifndef FOTO_SPHERE_H
 #define FOTO_SPHERE_H
 
+#include <vector>
 #include "../structure/Structure.h"
 #include "../point3/Point3.h"
 #include "../ray/Ray.h"
@@ -25,6 +26,8 @@ public:
     float getRadius() const;
 
     void setRadius(float radius);
+
+    std::vector<Vector3> intersections(Ray ray) const;
 
     Point3 getIntersectionPoints(Ray ray, Point3* intersections, float distance) const;
 

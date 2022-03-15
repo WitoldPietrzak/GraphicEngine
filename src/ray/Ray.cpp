@@ -17,7 +17,7 @@ Vector3 Ray::getDirection() const {
 }
 
 
-void Ray::setDirection (Vector3 direction) {
+void Ray::setDirection(Vector3 direction) {
     Ray::direction = direction;
 }
 
@@ -53,8 +53,15 @@ void Ray::setTMax(float tMax) {
     Ray::tMax = tMax;
 }
 
-Ray::Ray(Vector3 origin, Vector3 direction) : origin(origin), direction(direction) {}
+Ray::Ray(Vector3 origin, Vector3 direction) : origin(origin), direction(direction) {
+    this->destination = origin + direction;
+}
+
 Ray::Ray(Ray const &ray) : origin(ray.origin), direction(ray.direction) {}
+
+Vector3 Ray::getPointInDistance(float distance) {
+    return this->origin + this->direction * distance;
+}
 
 
 

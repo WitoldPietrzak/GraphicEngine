@@ -43,7 +43,8 @@ public:
     float multiplyScalar(const Vector3& vector3);
     Vector3 div(float k);
     Vector3 div(const Vector3& vector3);
-    Vector3 normalize();
+    void normalize();
+    Vector3 getNormalized();
 
     Vector3 operator + ();
     Vector3 operator - ();
