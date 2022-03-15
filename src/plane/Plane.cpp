@@ -2,15 +2,8 @@
 // Created by witek on 01.03.2022.
 //
 
+#include <vector>
 #include "Plane.h"
-
-Point3 Plane::getX() const {
-    return x;
-}
-
-void Plane::setX(Point3 x) {
-    Plane::x = x;
-}
 
 Vector3 Plane::getNormalVector() const {
     return normalVector;
@@ -20,12 +13,45 @@ void Plane::setNormalVector(Vector3 normalVector) {
     Plane::normalVector = normalVector;
 }
 
-float Plane::getDisplacement() const {
-    return displacement;
+std::vector<Vector3> Plane::intersections(const Ray &ray) const {
+    auto ndotxr = this->normalVector.multiplyScalar(ray.getOrigin());
+    auto ndotv = this->normalVector.multiplyScalar(ray.getDirection());
+    if (ndotv == 0) {
+        return std::vector<Vector3>();
+    }
+
+    auto t = (this->distance - ndotxr) / ndotv;
+    if (t < 0) {
+        return std::vector<Vector3>();
+    }
+    auto intersectionPoint = ray.getOrigin() + ray.getDirection() * t;
+    std::vector<Vector3> intersections;
+    intersections.push_back(intersectionPoint);
+
+    return intersections;
 }
 
-void Plane::setDisplacement(float displacement) {
-    Plane::displacement = displacement;
+float Plane::getDistance() const {
+    return distance;
 }
 
-Plane::Plane(Point3 x, Vector3 normalVector, float displacement) : x(x), normalVector(normalVector), displacement(displacement) {}
+void Plane::setDistance(float distance) {
+    Plane::distance = distance;
+}
+
+Plane::Plane(const Vector3 &normalVector, float distance) : normalVector(normalVector), distance(distance) {}
+
+Plane::Plane(const Vector3 &normalVector, const Vector3 &point) : normalVector(normalVector),
+                                                                  distance(calculateDistance(normalVector, point)) {}
+
+
+float Plane::calculateDistance(Vector3 normalVector, const Vector3 &point) {
+    return (normalVector *
+            (normalVector.multiplyScalar(point) / normalVector.multiplyScalar(normalVector))).getLength();
+}
+
+float Plane::calculateDistance(Vector3 point) {
+
+    return this->normalVector.multiplyScalar(
+            point - Ray(Vector3(0, 0, 0), normalVector).getPointInDistance(this->distance));
+}

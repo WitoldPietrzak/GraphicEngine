@@ -53,27 +53,28 @@ Sphere::Sphere(Vector3 center, float radius) : center(center), radius(radius) {}
 Sphere::Sphere(const Sphere &sphere) : center(sphere.center), radius(sphere.radius) {}
 
 std::vector<Vector3> Sphere::intersections(Ray ray) const {
+
     std::vector<Vector3> intersections = std::vector<Vector3>();
 
-    auto L = new Vector3(ray.getOrigin(), this->center);
-    auto tc = L->multiplyScalar(ray.getDirection());
+    auto rayToCenterVector = new Vector3(ray.getOrigin(), this->center);
+    auto b = rayToCenterVector->multiplyScalar(ray.getDirection());
 
-    auto d = sqrtf(L->getLengthSquared() - tc * tc);
+    auto d = sqrtf(rayToCenterVector->getLengthSquared() - b * b);
     if (d > this->radius) {
         return intersections;
     }
     auto tlc = sqrtf(this->radius * this->radius - d * d);
-    auto t1 = tc - tlc;
-    auto t2 = tc + tlc;
+    auto root1 = b - tlc;
+    auto root2 = b + tlc;
     if (tlc == 0) {
-        intersections.push_back(ray.getPointInDistance(t1));
+        intersections.push_back(ray.getPointInDistance(root1));
         return intersections;
     }
-    if (t1 > 0) {
-        intersections.push_back(ray.getPointInDistance(t1));
+    if (root1 > 0) {
+        intersections.push_back(ray.getPointInDistance(root1));
     }
-    if (t2 > 0) {
-        intersections.push_back(ray.getPointInDistance(t2));
+    if (root2 > 0) {
+        intersections.push_back(ray.getPointInDistance(root2));
     }
     return intersections;
 }

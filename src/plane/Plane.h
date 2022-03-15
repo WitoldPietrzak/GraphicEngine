@@ -9,28 +9,33 @@
 #include "../structure/Structure.h"
 #include "../point3/Point3.h"
 #include "../vector3/Vector3.h"
+#include "../ray/Ray.h"
 
 class Plane: Structure {
 
 private:
-    Point3 x;
     Vector3 normalVector;
-    float displacement;
+    float distance;
 
 public:
-    Point3 getX() const;
-
-    void setX(Point3 x);
 
     Vector3 getNormalVector() const;
 
     void setNormalVector(Vector3 normalVector);
 
-    float getDisplacement() const;
+    float getDistance() const;
 
-    void setDisplacement(float displacement);
+    void setDistance(float distance);
 
-    Plane(Point3 x, Vector3 normalVector, float displacement);
+    Plane(const Vector3 &normalVector, float distance);
+
+    Plane(const Vector3 &normalVector, const Vector3 &point);
+
+    std::vector<Vector3> intersections(const Ray& ray) const;
+
+    static float calculateDistance (Vector3 normalVector, const Vector3& point);
+
+    float calculateDistance(Vector3 point);
 
 
 

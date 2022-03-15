@@ -75,7 +75,7 @@ Vector3 Vector3::multiplyVector(const Vector3 &vector3) {
             this->x * vector3.y - this->y * vector3.x);
 }
 
-float Vector3::multiplyScalar(const Vector3 &vector3) {
+float Vector3::multiplyScalar(const Vector3 &vector3) const {
     return (this->x * vector3.x + this->y * vector3.y + this->z * vector3.z);
 }
 
@@ -174,7 +174,7 @@ void Vector3::normalize() {
     this->z = result.z;
 }
 
-Vector3 Vector3::getNormalized() {
+Vector3 Vector3::getNormalized(){
     float n = this->getLength();
     if (n == 0) {
         throw DivisionException();

@@ -23,8 +23,15 @@ int main() {
     Ray R3 = Ray(Vector3(0, 50, 10), Vector3(0, -100, 0).getNormalized());
     auto point5 = sphere.intersections(R3);
     //7
-//    Plane plane = Plane()
+    Plane plane = Plane(Vector3(0, 0.5, 0.5), Vector3(0, 0, 0));
     //8
+    auto point6 = plane.intersections(R2);
+
+
+    auto plane2 = Plane(Vector3(6, 5, 1), Vector3(0, 0, 30));
+    auto ray = Ray(Vector3(0, 0, 0), Vector3(Vector3(0, 0, 0), Vector3(2, 4, 8)).getNormalized());
+    auto test = plane.intersections(ray);
+
 
     return 0;
 }
