@@ -37,6 +37,8 @@ public:
 
     float calculateDistance(Vector3 point);
 
+    bool belongs(const Vector3& point) const;
+
 
 
 };

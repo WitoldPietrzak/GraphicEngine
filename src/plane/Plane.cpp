@@ -4,6 +4,7 @@
 
 #include <vector>
 #include "Plane.h"
+#include "../Exceptions/InfiniteIntersectionException.h"
 
 Vector3 Plane::getNormalVector() const {
     return normalVector;
@@ -17,6 +18,9 @@ std::vector<Vector3> Plane::intersections(const Ray &ray) const {
     auto ndotxr = this->normalVector.multiplyScalar(ray.getOrigin());
     auto ndotv = this->normalVector.multiplyScalar(ray.getDirection());
     if (ndotv == 0) {
+        if (belongs(ray.getOrigin())) {
+            throw InfiniteIntersectionException();
+        }
         return std::vector<Vector3>();
     }
 
@@ -54,4 +58,9 @@ float Plane::calculateDistance(Vector3 point) {
 
     return this->normalVector.multiplyScalar(
             point - Ray(Vector3(0, 0, 0), normalVector).getPointInDistance(this->distance));
+}
+
+bool Plane::belongs(const Vector3 &point) const {
+    return this->getNormalVector().getX() * point.getX() + this->getNormalVector().getY() * point.getY() +
+           this->getNormalVector().getZ() * point.getZ() + this->getDistance() == 0;
 }

@@ -14,8 +14,6 @@ private:
 
     Vector3 origin;
     Vector3 direction;
-    Vector3 destination = Vector3(0,0,0);
-    float distance = 0.0;
     float tMin = 0.0;
     float tMax = 0.0;
 public:
@@ -27,14 +25,6 @@ public:
     Vector3 getDirection() const;
 
     void setDirection (Vector3 direction);
-
-    Vector3 getDestination() const;
-
-    void setDestination(Vector3 destination);
-
-    float getDistance();
-
-    void setDistance(float distance);
 
     float getTMin() const;
 

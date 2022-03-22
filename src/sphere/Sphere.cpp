@@ -24,30 +24,6 @@ void Sphere::setRadius(float radius) {
     Sphere::radius = radius;
 }
 
-Point3 Sphere::getIntersectionPoints(Ray ray, Point3 *intersections, float distance) const {
-    Vector3 vec1 = ray.getOrigin() - center;
-    float b = -vec1.multiplyScalar(ray.getDirection());
-    float det = (b * b) - vec1.multiplyScalar(vec1) + radius * radius;
-    if (det > 0) {
-        float sqDet = sqrtf(det);
-        float root1 = b - sqDet;
-        float root2 = b + sqDet;
-        if (root2 > 0) {
-            if (root1 < 0) {
-                if (root2 < distance) {
-                    distance = root2;
-                }
-            } else {
-                if (root1 < distance) {
-                    distance = root1;
-                }
-            }
-        }
-    } else
-        return *intersections;
-
-}
-
 Sphere::Sphere(Vector3 center, float radius) : center(center), radius(radius) {}
 
 Sphere::Sphere(const Sphere &sphere) : center(sphere.center), radius(sphere.radius) {}
@@ -56,26 +32,36 @@ std::vector<Vector3> Sphere::intersections(Ray ray) const {
 
     std::vector<Vector3> intersections = std::vector<Vector3>();
 
-    auto rayToCenterVector = new Vector3(ray.getOrigin(), this->center);
-    auto b = rayToCenterVector->multiplyScalar(ray.getDirection());
-
-    auto d = sqrtf(rayToCenterVector->getLengthSquared() - b * b);
-    if (d > this->radius) {
+    //
+    auto v = this->getCenter() - ray.getOrigin();
+    auto b = v.multiplyScalar(ray.getDirection());
+    auto delta = (b * b) - v.multiplyScalar(v) + powf(this->getRadius(), 2);
+    if (delta < 0) {
         return intersections;
     }
-    auto tlc = sqrtf(this->radius * this->radius - d * d);
-    auto root1 = b - tlc;
-    auto root2 = b + tlc;
-    if (tlc == 0) {
-        intersections.push_back(ray.getPointInDistance(root1));
+    auto sqrtDelta = sqrtf(delta);
+    auto det1 = b - sqrtDelta;
+    auto det2 = b + sqrtDelta;
+    if (sqrtDelta == 0) {
+        intersections.push_back(ray.getPointInDistance(det1));
         return intersections;
     }
-    if (root1 > 0) {
-        intersections.push_back(ray.getPointInDistance(root1));
+    if (det1 > 0) {
+        intersections.push_back(ray.getPointInDistance(det1));
     }
-    if (root2 > 0) {
-        intersections.push_back(ray.getPointInDistance(root2));
+    if (det2 > 0) {
+        intersections.push_back(ray.getPointInDistance(det2));
     }
     return intersections;
+}
+
+bool Sphere::belongs(const Vector3 &point) const {
+    return powf(point.getX() - this->getCenter().getX(), 2) + powf(point.getY() - this->getCenter().getY(), 2) +
+           powf(point.getZ() - this->getCenter().getZ(), 2) - powl(this->getRadius(), 2) == 0;
+}
+
+bool Sphere::inside(const Vector3 &point) const {
+    return powf(point.getX() - this->getCenter().getX(), 2) + powf(point.getY() - this->getCenter().getY(), 2) +
+           powf(point.getZ() - this->getCenter().getZ(), 2) - powl(this->getRadius(), 2) < 0;
 }
 

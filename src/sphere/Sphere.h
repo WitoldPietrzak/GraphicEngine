@@ -29,7 +29,8 @@ public:
 
     std::vector<Vector3> intersections(Ray ray) const;
 
-    Point3 getIntersectionPoints(Ray ray, Point3* intersections, float distance) const;
+    bool belongs(const Vector3& point) const;
+    bool inside(const Vector3& point) const;
 
     Sphere(Vector3 center, float radius);
 
