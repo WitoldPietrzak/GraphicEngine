@@ -8,7 +8,7 @@
 
 #include "../structure/Structure.h"
 #include "../point3/Point3.h"
-#include "../vector3/Vector3.h"
+#include "../../Vector3/Vector3.h"
 #include "../ray/Ray.h"
 
 class Plane: Structure {

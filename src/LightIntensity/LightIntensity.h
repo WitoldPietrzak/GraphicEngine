@@ -10,9 +10,10 @@ class LightIntensity {
 private:
     int r, g, b;
 public:
-    LightIntensity(double r, double g, double b);
 
     LightIntensity(int r, int g, int b);
+
+    LightIntensity();
 
     int getR() const;
 
@@ -28,7 +29,7 @@ public:
 
     void add(int R, int G, int B);
 
-    LightIntensity add(LightIntensity &li);
+    void add(LightIntensity &li);
 
     LightIntensity sum(LightIntensity &li);
 

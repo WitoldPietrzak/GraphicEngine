@@ -7,7 +7,7 @@
 
 #include <vector>
 #include "../structure/Structure.h"
-#include "../point3/Point3.h"
+#include "../../point3/Point3.h"
 #include "../ray/Ray.h"
 
 

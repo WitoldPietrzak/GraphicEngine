@@ -4,7 +4,7 @@
 
 #include <vector>
 #include "Plane.h"
-#include "../Exceptions/InfiniteIntersectionException.h"
+#include "../../Exceptions/InfiniteIntersectionException.h"
 
 Vector3 Plane::getNormalVector() const {
     return normalVector;

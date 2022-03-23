@@ -6,6 +6,8 @@
 
 LightIntensity::LightIntensity(int r, int g, int b) : r(r), g(g), b(b) {}
 
+LightIntensity::LightIntensity():r(0),g(0),b(0) {}
+
 int LightIntensity::getR() const {
     return r;
 }
@@ -36,7 +38,7 @@ void LightIntensity::add(int R, int G, int B) {
     this->setB(this->getB() + B);
 }
 
-LightIntensity LightIntensity::add(LightIntensity &li) {
+void LightIntensity::add(LightIntensity &li) {
     this->setR(this->getR() + li.getR());
     this->setG(this->getG() + li.getG());
     this->setB(this->getB() + li.getB());
