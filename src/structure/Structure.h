@@ -6,8 +6,12 @@
 #define FOTO_STRUCTURE_H
 
 
-class Structure {
+#include <vector>
+#include "../vector3/Vector3.h"
+#include "../ray/Ray.h"
 
+class Structure {
+    virtual std::vector<Vector3> intersections(Ray ray) const = 0;
 
 
 };

@@ -27,7 +27,7 @@ public:
 
     void setRadius(float radius);
 
-    std::vector<Vector3> intersections(Ray ray) const;
+    std::vector<Vector3> intersections(Ray ray) const override;
 
     bool belongs(const Vector3& point) const;
     bool inside(const Vector3& point) const;

@@ -14,7 +14,7 @@ void Plane::setNormalVector(Vector3 normalVector) {
     Plane::normalVector = normalVector;
 }
 
-std::vector<Vector3> Plane::intersections(const Ray &ray) const {
+std::vector<Vector3> Plane::intersections(Ray ray) const {
     auto ndotxr = this->normalVector.multiplyScalar(ray.getOrigin());
     auto ndotv = this->normalVector.multiplyScalar(ray.getDirection());
     if (ndotv == 0) {

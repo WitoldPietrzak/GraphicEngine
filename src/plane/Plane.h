@@ -31,7 +31,7 @@ public:
 
     Plane(const Vector3 &normalVector, const Vector3 &point);
 
-    std::vector<Vector3> intersections(const Ray& ray) const;
+    std::vector<Vector3> intersections(Ray ray) const override;
 
     static float calculateDistance (Vector3 normalVector, const Vector3& point);
 
