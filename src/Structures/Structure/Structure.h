@@ -7,8 +7,8 @@
 
 
 #include <vector>
-#include "../../vector3/Vector3.h"
-#include "../../ray/Ray.h"
+#include "../../Vector3/Vector3.h"
+#include "../../Ray/Ray.h"
 
 class Structure {
     virtual std::vector<Vector3> intersections(Ray ray) const = 0;

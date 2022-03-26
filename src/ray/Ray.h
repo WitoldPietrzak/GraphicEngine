@@ -2,7 +2,6 @@
 // Created by ancym on 12.03.2022.
 //
 
-#include "../../point3/Point3.h"
 #include "../Vector3/Vector3.h"
 
 #ifndef FOTO_RAY_H

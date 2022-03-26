@@ -6,9 +6,8 @@
 #define FOTO_SPHERE_H
 
 #include <vector>
-#include "../structure/Structure.h"
-#include "../../point3/Point3.h"
-#include "../ray/Ray.h"
+#include "../../Vector3/Vector3.h"
+#include "../Structure/Structure.h"
 
 
 class Sphere: Structure{

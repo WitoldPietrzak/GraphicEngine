@@ -1,8 +1,9 @@
 #include <iostream>
-#include "vector3/Vector3.h"
-#include "sphere/Sphere.h"
-#include "plane/Plane.h"
+#include <vector>
+#include "Vector3/Vector3.h"
 #include "Exceptions/InfiniteIntersectionException.h"
+#include "Structures/Sphere/Sphere.h"
+#include "Structures/Plane/Plane.h"
 
 void readVector(const Vector3 &vector3) {
     std::cout << "[ " << vector3.getX() << " " << vector3.getY() << " " << vector3.getZ() << " ]" << std::endl;

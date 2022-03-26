@@ -3,7 +3,6 @@
 //
 
 #include "Sphere.h"
-#include "../../vector3/Vector3.h"
 #include <cmath>
 #include <vector>
 
