@@ -4,6 +4,7 @@
 #include "Exceptions/InfiniteIntersectionException.h"
 #include "Structures/Sphere/Sphere.h"
 #include "Structures/Plane/Plane.h"
+#include "Image/Image.h"
 
 void readVector(const Vector3 &vector3) {
     std::cout << "[ " << vector3.getX() << " " << vector3.getY() << " " << vector3.getZ() << " ]" << std::endl;
@@ -19,8 +20,7 @@ void readVectorList(const std::vector<Vector3> &vectors) {
     }
 }
 
-
-int main() {
+void task1() {
     Vector3 sphereVector = Vector3(0, 0, 0);
     Vector3 rayVector = Vector3(0, 0, -20);
 
@@ -73,7 +73,35 @@ int main() {
     auto I6 = S1.intersections(R5);
     std::cout << "Ray from inside S1: \n";
     readVectorList(I6);
+}
+
+void task2() {
+    Image image = Image(500, 500);
+    Sphere sphere = Sphere(Vector3(0, 0, 0), 100);
 
 
+    for (int i = 0; i < image.getHeight(); i++) {
+        for (int j = 0; j < image.getWidth(); j++) {
+            auto pixelX = (-image.getWidth() / 2.0f) + j;
+            auto pixelY = (-image.getHeight() / 2.0f) + i;
+            auto pixelXMid = (pixelX + 1.0f) / 2;
+            auto pixelYMid = (pixelY + 1.0f) / 2;
+
+            Ray ray = Ray(Vector3(pixelXMid, pixelYMid, -30), Vector3(0, 0, 1));
+            auto intersection = sphere.intersections(ray);
+            if (!intersection.empty()) {
+                image.setPixel(j, i, LightIntensity::RED());
+            } else {
+                image.setPixel(j, i, LightIntensity::BLACK());
+            }
+
+        }
+    }
+    image.save("test.bmp");
+
+}
+
+int main() {
+    task2();
     return 0;
 }

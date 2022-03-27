@@ -6,9 +6,11 @@
 #define FOTO_LIGHTINTENSITY_H
 
 
+#include <cstdint>
+
 class LightIntensity {
 private:
-    int r, g, b;
+    int8_t r, g, b;
 public:
 
     LightIntensity(int r, int g, int b);
