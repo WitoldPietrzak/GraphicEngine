@@ -10,7 +10,7 @@
 #include "../Structure/Structure.h"
 
 
-class Sphere: Structure{
+class Sphere: public Structure{
 
 private:
 
@@ -34,6 +34,10 @@ public:
     Sphere(Vector3 center, float radius);
 
     Sphere(const Sphere &sphere);
+
+    Sphere(const Vector3& center, float radius, LightIntensity color);
+
+
 
 };
 

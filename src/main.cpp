@@ -5,6 +5,8 @@
 #include "Structures/Sphere/Sphere.h"
 #include "Structures/Plane/Plane.h"
 #include "Image/Image.h"
+#include "Camera/Camera.h"
+#include "Camera/Orto/OrthogonalCamera.h"
 
 void readVector(const Vector3 &vector3) {
     std::cout << "[ " << vector3.getX() << " " << vector3.getY() << " " << vector3.getZ() << " ]" << std::endl;
@@ -76,28 +78,14 @@ void task1() {
 }
 
 void task2() {
-    Image image = Image(500, 500);
-    Sphere sphere = Sphere(Vector3(0, 0, 0), 100);
-
-
-    for (int i = 0; i < image.getHeight(); i++) {
-        for (int j = 0; j < image.getWidth(); j++) {
-            auto pixelX = (-image.getWidth() / 2.0f) + j;
-            auto pixelY = (-image.getHeight() / 2.0f) + i;
-            auto pixelXMid = (pixelX + 1.0f) / 2;
-            auto pixelYMid = (pixelY + 1.0f) / 2;
-
-            Ray ray = Ray(Vector3(pixelXMid, pixelYMid, -30), Vector3(0, 0, 1));
-            auto intersection = sphere.intersections(ray);
-            if (!intersection.empty()) {
-                image.setPixel(j, i, LightIntensity::RED());
-            } else {
-                image.setPixel(j, i, LightIntensity::BLACK());
-            }
-
-        }
-    }
-    image.save("test.bmp");
+    Structure* sphere = new Sphere(Vector3(0, 0, 0), 100,LightIntensity::RED());
+    Structure* sphere2 = new Sphere(Vector3(0, 0, 0), 20,LightIntensity::BLUE());
+    OrthogonalCamera ort = OrthogonalCamera(Vector3(0,0,0),Vector3(0,0,1),Vector3(0,1,0),500,500);
+    Scene scene = Scene();
+    scene.addStructure(sphere);
+    scene.addStructure(sphere2);
+    auto test2 = ort.renderScene(scene,500,500);
+    test2.save("test.bmp");
 
 }
 

@@ -21,6 +21,8 @@ public:
 
     Structure();
 
+    virtual ~Structure();
+
     const LightIntensity &getColor() const;
 
     void setColor(const LightIntensity &color);

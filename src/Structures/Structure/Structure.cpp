@@ -17,3 +17,7 @@ void Structure::setColor(const LightIntensity &color) {
 Structure::Structure() {
     this->color = LightIntensity::BLACK();
 }
+
+Structure::~Structure() {
+
+}

@@ -9,7 +9,7 @@
 #include "../Structure/Structure.h"
 #include "../../Vector3/Vector3.h"
 
-class Plane: Structure {
+class Plane: public Structure {
 
 private:
     Vector3 normalVector;
