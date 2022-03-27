@@ -79,8 +79,8 @@ void task1() {
 
 void task2() {
     Structure* sphere = new Sphere(Vector3(0, 0, 0), 100,LightIntensity::RED());
-    Structure* sphere2 = new Sphere(Vector3(0, 0, 0), 20,LightIntensity::BLUE());
-    OrthogonalCamera ort = OrthogonalCamera(Vector3(0,0,0),Vector3(0,0,1),Vector3(0,1,0),500,500);
+    Structure* sphere2 = new Sphere(Vector3(0, -100, -100), 20,LightIntensity::BLUE());
+    OrthogonalCamera ort = OrthogonalCamera(Vector3(0,0,200),Vector3(0,0,-1),Vector3(0,1,0),500,500);
     Scene scene = Scene();
     scene.addStructure(sphere);
     scene.addStructure(sphere2);

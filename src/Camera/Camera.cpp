@@ -17,7 +17,7 @@ void Camera::setPosition(const Vector3 &position) {
     Camera::position = position;
 }
 
-const Vector3 &Camera::getTargetVector() const {
+const Vector3 Camera::getTargetVector() const {
     return targetVector;
 }
 

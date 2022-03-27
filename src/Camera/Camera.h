@@ -11,7 +11,7 @@
 #include "../Scene/Scene.h"
 
 class Camera {
-private:
+protected:
     Vector3 position;
     Vector3 targetVector;
     Vector3 upVector;
@@ -26,7 +26,7 @@ public:
 
     void setPosition(const Vector3 &position);
 
-    const Vector3 &getTargetVector() const;
+    const Vector3 getTargetVector() const;
 
     void setTargetVector(const Vector3 &targetVector);
 
