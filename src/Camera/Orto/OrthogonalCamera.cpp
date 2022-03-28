@@ -5,8 +5,8 @@
 #include "OrthogonalCamera.h"
 
 OrthogonalCamera::OrthogonalCamera(const Vector3 &position, const Vector3 &targetVector, const Vector3 &upVector,
-                                   float width, float height) : Camera(position, targetVector, upVector), width(width),
-                                                                height(height) {}
+                                   float width, float height, OrthogonalSampler sampler) : Camera(position, targetVector, upVector), width(width),
+                                                                height(height), sampler(sampler) {}
 
 Image OrthogonalCamera::renderScene(const Scene &scene, int width, int height) {
 
@@ -17,25 +17,12 @@ Image OrthogonalCamera::renderScene(const Scene &scene, int width, int height) {
     auto vectorY = this->upVector;
     for (int i = 0; i < image.getHeight(); i++) {
         for (int j = 0; j < image.getWidth(); j++) {
+            // TODO sampling
             auto origin = this->position + (vectorY * this->getHeight() / 2.0f) - (vectorX * this->getWidth() / 2.0f) -
                           (vectorY * i * pixelSizeY) + (vectorX * j * pixelSizeX);
+
             auto centeredOrigin = origin + (vectorX * pixelSizeX / 2.0f) + (vectorY * pixelSizeY / 2.0f);
-            Ray ray = Ray(centeredOrigin, this->targetVector);
-            LightIntensity color = scene.getBackgroundColor();
-            float distance = -1;
-            for (auto &structure: scene.getStructures()) {
-                auto currentIntersections = structure->intersections(ray);
-                if (currentIntersections.empty()) {
-                    continue;
-                }
-                for (auto &intersection: currentIntersections) {
-                    auto currentDistance = (intersection - ray.getOrigin()).getLength();
-                    if (currentDistance < distance || distance == -1) {
-                        distance = currentDistance;
-                        color = structure->getColor();
-                    }
-                }
-            }
+            auto color = sampler.doSampling(scene,centeredOrigin,this->targetVector,vectorX,vectorY,pixelSizeX,pixelSizeY,6);
             image.setPixel(j, i, color);
 
 
@@ -58,4 +45,12 @@ float OrthogonalCamera::getHeight() const {
 
 void OrthogonalCamera::setHeight(float height) {
     OrthogonalCamera::height = height;
+}
+
+const OrthogonalSampler &OrthogonalCamera::getSampler() const {
+    return sampler;
+}
+
+void OrthogonalCamera::setSampler(const OrthogonalSampler &sampler) {
+    OrthogonalCamera::sampler = sampler;
 }

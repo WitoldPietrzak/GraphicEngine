@@ -100,4 +100,16 @@ void LightIntensity::operator+=(LightIntensity &li) {
     add(li);
 }
 
+bool LightIntensity::equals(LightIntensity &li) {
+    return (this->r == li.r && this->g == li.g && this->b == li.b);
+}
+
+bool LightIntensity::operator==(LightIntensity &li) {
+    return equals(li);
+}
+
+bool LightIntensity::operator!=(LightIntensity &li) {
+    return !equals(li);
+}
+
 

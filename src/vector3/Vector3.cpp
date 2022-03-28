@@ -68,7 +68,7 @@ Vector3 Vector3::multiply(const Vector3 &vector3) {
     return Vector3(this->x * vector3.x, this->y * vector3.y, this->z * vector3.z);
 }
 
-Vector3 Vector3::multiplyVector(const Vector3 &vector3) {
+Vector3 Vector3::multiplyVector(const Vector3 &vector3) const {
     return Vector3(
             this->y * vector3.z - this->z * vector3.y,
             this->z * vector3.x - this->x * vector3.z,

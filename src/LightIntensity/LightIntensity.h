@@ -45,6 +45,8 @@ public:
 
     LightIntensity multiply(float num);
 
+    bool equals(LightIntensity &li);
+
 
     static LightIntensity BLACK();
 
@@ -73,6 +75,10 @@ public:
     LightIntensity operator*=(float num);
 
     LightIntensity operator/=(float num);
+
+    bool operator==(LightIntensity &li);
+
+    bool operator!=(LightIntensity &li);
 
     friend LightIntensity operator*(float num, LightIntensity &li);
 

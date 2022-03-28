@@ -39,7 +39,7 @@ public:
     Vector3 sub(const Vector3& obj);
     Vector3 multiply(float k);
     Vector3 multiply(const Vector3& vector3);
-    Vector3 multiplyVector(const Vector3& vector3);
+    Vector3 multiplyVector(const Vector3& vector3) const;
     float multiplyScalar(const Vector3& vector3) const;
     Vector3 div(float k);
     Vector3 div(const Vector3& vector3);
