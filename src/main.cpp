@@ -7,6 +7,7 @@
 #include "Image/Image.h"
 #include "Camera/Camera.h"
 #include "Camera/Orto/OrthogonalCamera.h"
+#include "Camera/Persp/PerspectiveCamera.h"
 
 void readVector(const Vector3 &vector3) {
     std::cout << "[ " << vector3.getX() << " " << vector3.getY() << " " << vector3.getZ() << " ]" << std::endl;
@@ -78,15 +79,20 @@ void task1() {
 }
 
 void task2() {
-    Structure* sphere = new Sphere(Vector3(0, 0, 0), 100,LightIntensity::RED());
-    Structure* sphere2 = new Sphere(Vector3(0, -100, -100), 20,LightIntensity::BLUE());
+    Structure* sphere = new Sphere(Vector3(0, 0, 0), 100,LightIntensity::BLUE());
+    Structure* sphere2 = new Sphere(Vector3(-150, 0, -100), 100,LightIntensity::RED());
     OrthogonalCamera ort = OrthogonalCamera(Vector3(0,0,200),Vector3(0,0,-1),Vector3(0,1,0),500,500, OrthogonalSampler(12));
+    PerspectiveCamera perspectiveCamera = PerspectiveCamera(Vector3(0,0,200),Vector3(0,0,-1),Vector3(0,1,0),200,500,500,PerspectiveSampler(12));
     Scene scene = Scene();
-    scene.setBackgroundColor(LightIntensity::WHITE());
+    scene.setBackgroundColor(LightIntensity::BLACK());
     scene.addStructure(sphere);
     scene.addStructure(sphere2);
     auto test2 = ort.renderScene(scene,500,500);
-    test2.save("testSampler5.bmp");
+    auto test3 = perspectiveCamera.renderScene(scene,500,500);
+    test2.save("orthogonal.bmp");
+    test3.save("perspective.bmp");
+
+
 
 }
 
