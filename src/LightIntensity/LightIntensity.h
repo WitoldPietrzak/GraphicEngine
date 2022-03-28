@@ -10,7 +10,7 @@
 
 class LightIntensity {
 private:
-    int8_t r, g, b;
+    int r, g, b;
 public:
 
     LightIntensity(int r, int g, int b);

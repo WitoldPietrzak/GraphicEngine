@@ -11,9 +11,18 @@
 
 class OrthogonalSampler {
 private:
+    int maxDepth;
 public:
-    LightIntensity doSampling(const Scene& scene, Vector3 center, const Vector3& target, Vector3 vectorX, Vector3 vectorY, float pixelWidthX, float pixelWidthY, int maxDepth);
-    LightIntensity doSampling(const Scene& scene, Vector3 center, const Vector3& target, Vector3 vectorX, Vector3 vectorY, float pixelWidthX, float pixelWidthY, int maxDepth, int depth, int location, LightIntensity centerColor, LightIntensity cornerColor);
+    OrthogonalSampler();
+
+    explicit OrthogonalSampler(int maxDepth);
+
+    int getMaxDepth() const;
+
+    void setMaxDepth(int maxDepth);
+
+    LightIntensity doSampling(const Scene& scene, Vector3 center, const Vector3& target, Vector3 vectorX, Vector3 vectorY, float pixelWidthX, float pixelWidthY);
+    LightIntensity doSampling(const Scene& scene, Vector3 center, const Vector3& target, Vector3 vectorX, Vector3 vectorY, float pixelWidthX, float pixelWidthY, int depth, int location, LightIntensity centerColor, LightIntensity cornerColor);
     LightIntensity sampleRay(const Ray& ray, const Scene& scene);
 
 

@@ -8,7 +8,7 @@ LightIntensity
 OrthogonalSampler::doSampling(const Scene &scene, Vector3 center, const Vector3 &target, Vector3 vectorX,
                               Vector3 vectorY,
                               float pixelWidthX,
-                              float pixelWidthY, int maxDepth) {
+                              float pixelWidthY) {
 
     float startWeight = 1.0f;
     float endWeight = startWeight;
@@ -20,6 +20,10 @@ OrthogonalSampler::doSampling(const Scene &scene, Vector3 center, const Vector3 
     Ray bottomRight = Ray(center + (vectorX * pixelWidthX / 2.0f) - (vectorY * pixelWidthY / 2.0f), target);
 
     auto colorMD = sampleRay(middle, scene);
+
+    if (maxDepth <= 0) {
+        return colorMD;
+    }
     auto colorTL = sampleRay(topLeft, scene);
     auto colorTR = sampleRay(topRight, scene);
     auto colorBL = sampleRay(bottomLeft, scene);
@@ -27,23 +31,19 @@ OrthogonalSampler::doSampling(const Scene &scene, Vector3 center, const Vector3 
 
     if (colorTL != colorMD) {
         colorTL = doSampling(scene, (center + topLeft.getOrigin()) / 2, target, vectorX, vectorY, pixelWidthX / 2,
-                             pixelWidthY / 2,
-                             maxDepth, 1, 0, colorMD, colorTL);
+                             pixelWidthY / 2, 1, 0, colorMD, colorTL);
     }
     if (colorTR != colorMD) {
         colorTR = doSampling(scene, (center + topRight.getOrigin()) / 2, target, vectorX, vectorY, pixelWidthX / 2,
-                             pixelWidthY / 2,
-                             maxDepth, 1, 1, colorMD, colorTR);
+                             pixelWidthY / 2, 1, 1, colorMD, colorTR);
     }
     if (colorBL != colorMD) {
         colorBL = doSampling(scene, (center + bottomLeft.getOrigin()) / 2, target, vectorX, vectorY, pixelWidthX / 2,
-                             pixelWidthY / 2,
-                             maxDepth, 1, 2, colorMD, colorBL);
+                             pixelWidthY / 2, 1, 2, colorMD, colorBL);
     }
     if (colorBR != colorMD) {
         colorBR = doSampling(scene, (center + bottomRight.getOrigin()) / 2, target, vectorX, vectorY, pixelWidthX / 2,
-                             pixelWidthY / 2,
-                             maxDepth, 1, 3, colorMD, colorBR);
+                             pixelWidthY / 2, 1, 3, colorMD, colorBR);
     }
 
     int R = (colorMD.getR() + colorTL.getR() + colorTR.getR() + colorBL.getR() + colorBR.getR()) / 5;
@@ -76,7 +76,7 @@ LightIntensity OrthogonalSampler::sampleRay(const Ray &ray, const Scene &scene) 
 LightIntensity
 OrthogonalSampler::doSampling(const Scene &scene, Vector3 center, const Vector3 &target, Vector3 vectorX,
                               Vector3 vectorY,
-                              float pixelWidthX, float pixelWidthY, int maxDepth, int depth,
+                              float pixelWidthX, float pixelWidthY, int depth,
                               int location, LightIntensity centerColor, LightIntensity cornerColor) {
 
     Ray middle = Ray(center, target);
@@ -134,25 +134,21 @@ OrthogonalSampler::doSampling(const Scene &scene, Vector3 center, const Vector3 
     if (depth < maxDepth) {
         if (colorTL != colorMD) {
             colorTL = doSampling(scene, (center + topLeft.getOrigin()) / 2, target, vectorX, vectorY, pixelWidthX / 2,
-                                 pixelWidthY / 2,
-                                 maxDepth, depth + 1, 0, colorMD, colorTL);
+                                 pixelWidthY / 2, depth + 1, 0, colorMD, colorTL);
         }
         if (colorTR != colorMD) {
             colorTR = doSampling(scene, (center + topRight.getOrigin()) / 2, target, vectorX, vectorY, pixelWidthX / 2,
-                                 pixelWidthY / 2,
-                                 maxDepth, depth + 1, 1, colorMD, colorTR);
+                                 pixelWidthY / 2, depth + 1, 1, colorMD, colorTR);
         }
         if (colorBL != colorMD) {
             colorBL = doSampling(scene, (center + bottomLeft.getOrigin()) / 2, target, vectorX, vectorY,
                                  pixelWidthX / 2,
-                                 pixelWidthY / 2,
-                                 maxDepth, depth + 1, 2, colorMD, colorBL);
+                                 pixelWidthY / 2, depth + 1, 2, colorMD, colorBL);
         }
         if (colorBR != colorMD) {
             colorBR = doSampling(scene, (center + bottomRight.getOrigin()) / 2, target, vectorX, vectorY,
                                  pixelWidthX / 2,
-                                 pixelWidthY / 2,
-                                 maxDepth, depth + 1, 3, colorMD, colorBR);
+                                 pixelWidthY / 2, depth + 1, 3, colorMD, colorBR);
         }
     }
 
@@ -161,4 +157,16 @@ OrthogonalSampler::doSampling(const Scene &scene, Vector3 center, const Vector3 
     int G = (colorMD.getG() + colorTL.getG() + colorTR.getG() + colorBL.getG() + colorBR.getG()) / 5;
     int B = (colorMD.getB() + colorTL.getB() + colorTR.getB() + colorBL.getB() + colorBR.getB()) / 5;
     return {R, G, B};
+}
+
+OrthogonalSampler::OrthogonalSampler() : maxDepth(4) {}
+
+OrthogonalSampler::OrthogonalSampler(int maxDepth) : maxDepth(maxDepth) {}
+
+int OrthogonalSampler::getMaxDepth() const {
+    return maxDepth;
+}
+
+void OrthogonalSampler::setMaxDepth(int maxDepth) {
+    OrthogonalSampler::maxDepth = maxDepth;
 }

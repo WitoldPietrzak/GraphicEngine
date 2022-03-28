@@ -22,7 +22,7 @@ Image OrthogonalCamera::renderScene(const Scene &scene, int width, int height) {
                           (vectorY * i * pixelSizeY) + (vectorX * j * pixelSizeX);
 
             auto centeredOrigin = origin + (vectorX * pixelSizeX / 2.0f) + (vectorY * pixelSizeY / 2.0f);
-            auto color = sampler.doSampling(scene,centeredOrigin,this->targetVector,vectorX,vectorY,pixelSizeX,pixelSizeY,6);
+            auto color = sampler.doSampling(scene,centeredOrigin,this->targetVector,vectorX,vectorY,pixelSizeX,pixelSizeY);
             image.setPixel(j, i, color);
 
 
