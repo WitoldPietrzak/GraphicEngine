@@ -10,9 +10,6 @@ OrthogonalSampler::doSampling(const Scene &scene, Vector3 center, const Vector3 
                               float pixelWidthX,
                               float pixelWidthY) {
 
-    float startWeight = 1.0f;
-    float endWeight = startWeight;
-
     Ray middle = Ray(center, target);
     Ray topLeft = Ray(center - (vectorX * pixelWidthX / 2.0f) + (vectorY * pixelWidthY / 2.0f), target);
     Ray topRight = Ray(center + (vectorX * pixelWidthX / 2.0f) + (vectorY * pixelWidthY / 2.0f), target);
@@ -21,9 +18,9 @@ OrthogonalSampler::doSampling(const Scene &scene, Vector3 center, const Vector3 
 
     auto colorMD = sampleRay(middle, scene);
 
-    if (maxDepth <= 0) {
-        return colorMD;
-    }
+//    if (maxDepth <= 0) {
+//        return colorMD;
+//    }
     auto colorTL = sampleRay(topLeft, scene);
     auto colorTR = sampleRay(topRight, scene);
     auto colorBL = sampleRay(bottomLeft, scene);
@@ -46,9 +43,18 @@ OrthogonalSampler::doSampling(const Scene &scene, Vector3 center, const Vector3 
                              pixelWidthY / 2, 1, 3, colorMD, colorBR);
     }
 
-    int R = (colorMD.getR() + colorTL.getR() + colorTR.getR() + colorBL.getR() + colorBR.getR()) / 5;
-    int G = (colorMD.getG() + colorTL.getG() + colorTR.getG() + colorBL.getG() + colorBR.getG()) / 5;
-    int B = (colorMD.getB() + colorTL.getB() + colorTR.getB() + colorBL.getB() + colorBR.getB()) / 5;
+    int R = ((colorMD.getR() + colorTL.getR()) / 2
+             + (colorMD.getR() + colorTR.getR()) / 2
+             + (colorMD.getR() + colorBL.getR()) / 2
+             + (colorMD.getR() + colorBR.getR()) / 2) / 4;
+    int G = ((colorMD.getG() + colorTL.getG()) / 2
+             + (colorMD.getG() + colorTR.getG()) / 2
+             + (colorMD.getG() + colorBL.getG()) / 2
+             + (colorMD.getG() + colorBR.getG()) / 2) / 4;
+    int B = ((colorMD.getB() + colorTL.getB()) / 2
+             + (colorMD.getB() + colorTR.getB()) / 2
+             + (colorMD.getB() + colorBL.getB()) / 2
+             + (colorMD.getB() + colorBR.getB()) / 2) / 4;
     return {R, G, B};
 
 
@@ -153,9 +159,18 @@ OrthogonalSampler::doSampling(const Scene &scene, Vector3 center, const Vector3 
     }
 
 
-    int R = (colorMD.getR() + colorTL.getR() + colorTR.getR() + colorBL.getR() + colorBR.getR()) / 5;
-    int G = (colorMD.getG() + colorTL.getG() + colorTR.getG() + colorBL.getG() + colorBR.getG()) / 5;
-    int B = (colorMD.getB() + colorTL.getB() + colorTR.getB() + colorBL.getB() + colorBR.getB()) / 5;
+    int R = ((colorMD.getR() + colorTL.getR()) / 2
+             + (colorMD.getR() + colorTR.getR()) / 2
+             + (colorMD.getR() + colorBL.getR()) / 2
+             + (colorMD.getR() + colorBR.getR()) / 2) / 4;
+    int G = ((colorMD.getG() + colorTL.getG()) / 2
+             + (colorMD.getG() + colorTR.getG()) / 2
+             + (colorMD.getG() + colorBL.getG()) / 2
+             + (colorMD.getG() + colorBR.getG()) / 2) / 4;
+    int B = ((colorMD.getB() + colorTL.getB()) / 2
+             + (colorMD.getB() + colorTR.getB()) / 2
+             + (colorMD.getB() + colorBL.getB()) / 2
+             + (colorMD.getB() + colorBR.getB()) / 2) / 4;
     return {R, G, B};
 }
 

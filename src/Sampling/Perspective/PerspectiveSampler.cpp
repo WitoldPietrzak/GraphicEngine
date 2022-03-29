@@ -2,6 +2,7 @@
 // Created by Witek on 28.03.2022.
 //
 
+#include <iostream>
 #include "PerspectiveSampler.h"
 
 int PerspectiveSampler::getMaxDepth() const {
@@ -9,7 +10,7 @@ int PerspectiveSampler::getMaxDepth() const {
 }
 
 void PerspectiveSampler::setMaxDepth(int maxDepth) {
-    PerspectiveSampler::maxDepth = maxDepth;
+    this->maxDepth = maxDepth;
 }
 
 LightIntensity
@@ -41,26 +42,40 @@ PerspectiveSampler::doSampling(const Scene &scene, const Vector3& center,Vector3
     auto colorBL = sampleRay(bottomLeft, scene);
     auto colorBR = sampleRay(bottomRight, scene);
 
-    if (colorTL != colorMD) {
-        colorTL = doSampling(scene, center, (target+vectorTL)/2.0f, vectorX, vectorY, pixelWidthX / 2,
-                             pixelWidthY / 2, 1, 0, colorMD, colorTL);
+    if(maxDepth >1){
+        if (colorTL != colorMD) {
+            colorTL = doSampling(scene, center, (target+vectorTL/2.0f), vectorX, vectorY, pixelWidthX / 2,
+                                 pixelWidthY / 2, 1, 0, colorMD, colorTL);
+        }
+        if (colorTR != colorMD) {
+            colorTR = doSampling(scene, center, (target+vectorTR/2.0f), vectorX, vectorY, pixelWidthX / 2,
+                                 pixelWidthY / 2, 1, 1, colorMD, colorTR);
+        }
+        if (colorBL != colorMD) {
+            colorBL = doSampling(scene, center, (target+vectorBL/2.0f), vectorX, vectorY, pixelWidthX / 2,
+                                 pixelWidthY / 2, 1, 2, colorMD, colorBL);
+        }
+        if (colorBR != colorMD) {
+            colorBR = doSampling(scene, center, (target+vectorBR/2.0f), vectorX, vectorY, pixelWidthX / 2,
+                                 pixelWidthY / 2, 1, 3, colorMD, colorBR);
+        }
     }
-    if (colorTR != colorMD) {
-        colorTR = doSampling(scene, center, (target+vectorTR)/2.0f, vectorX, vectorY, pixelWidthX / 2,
-                             pixelWidthY / 2, 1, 1, colorMD, colorTR);
-    }
-    if (colorBL != colorMD) {
-        colorBL = doSampling(scene, center, (target+vectorBL)/2.0f, vectorX, vectorY, pixelWidthX / 2,
-                             pixelWidthY / 2, 1, 2, colorMD, colorBL);
-    }
-    if (colorBR != colorMD) {
-        colorBR = doSampling(scene, center, (target+vectorBR)/2.0f, vectorX, vectorY, pixelWidthX / 2,
-                             pixelWidthY / 2, 1, 3, colorMD, colorBR);
+    if(colorBR != colorMD || colorBL != colorMD || colorTL != colorMD || colorTR != colorMD){
+        std::cout<<"bang \n";
     }
 
-    int R = (colorMD.getR() + colorTL.getR() + colorTR.getR() + colorBL.getR() + colorBR.getR()) / 5;
-    int G = (colorMD.getG() + colorTL.getG() + colorTR.getG() + colorBL.getG() + colorBR.getG()) / 5;
-    int B = (colorMD.getB() + colorTL.getB() + colorTR.getB() + colorBL.getB() + colorBR.getB()) / 5;
+    int R = ((colorMD.getR() + colorTL.getR()) / 2
+             + (colorMD.getR() + colorTR.getR()) / 2
+             + (colorMD.getR() + colorBL.getR()) / 2
+             + (colorMD.getR() + colorBR.getR()) / 2) / 4;
+    int G = ((colorMD.getG() + colorTL.getG()) / 2
+             + (colorMD.getG() + colorTR.getG()) / 2
+             + (colorMD.getG() + colorBL.getG()) / 2
+             + (colorMD.getG() + colorBR.getG()) / 2) / 4;
+    int B = ((colorMD.getB() + colorTL.getB()) / 2
+             + (colorMD.getB() + colorTR.getB()) / 2
+             + (colorMD.getB() + colorBL.getB()) / 2
+             + (colorMD.getB() + colorBR.getB()) / 2) / 4;
     return {R, G, B};
 
 
@@ -90,6 +105,7 @@ PerspectiveSampler::doSampling(const Scene &scene, Vector3 center, Vector3 targe
                                Vector3 vectorY,
                                float pixelWidthX, float pixelWidthY, int depth,
                                int location, LightIntensity centerColor, LightIntensity cornerColor) {
+
 
     auto vectorMD = target-center;
     auto vectorTL = (target-(vectorX*pixelWidthX/2.0f)+(vectorY*pixelWidthY/2.0f))-center;
@@ -151,27 +167,36 @@ PerspectiveSampler::doSampling(const Scene &scene, Vector3 center, Vector3 targe
 
     if (depth < maxDepth) {
         if (colorTL != colorMD) {
-            colorTL = doSampling(scene, center, (target+vectorTL)/2.0f, vectorX, vectorY, pixelWidthX / 2,
-                                 pixelWidthY / 2, depth+ 1, 0, colorMD, colorTL);
+            colorTL = doSampling(scene, center, (target+vectorTL/2.0f), vectorX, vectorY, pixelWidthX / 2,
+                                 pixelWidthY / 2, depth+1, 0, colorMD, colorTL);
         }
         if (colorTR != colorMD) {
-            colorTR = doSampling(scene, center, (target+vectorTR)/2.0f, vectorX, vectorY, pixelWidthX / 2,
+            colorTR = doSampling(scene, center, (target+vectorTR/2.0f), vectorX, vectorY, pixelWidthX / 2,
                                  pixelWidthY / 2, depth+1, 1, colorMD, colorTR);
         }
         if (colorBL != colorMD) {
-            colorBL = doSampling(scene, center, (target+vectorBL)/2.0f, vectorX, vectorY, pixelWidthX / 2,
+            colorBL = doSampling(scene, center, (target+vectorBL/2.0f), vectorX, vectorY, pixelWidthX / 2,
                                  pixelWidthY / 2, depth+1, 2, colorMD, colorBL);
         }
         if (colorBR != colorMD) {
-            colorBR = doSampling(scene, center, (target+vectorBR)/2.0f, vectorX, vectorY, pixelWidthX / 2,
+            colorBR = doSampling(scene, center, (target+vectorBR/2.0f), vectorX, vectorY, pixelWidthX / 2,
                                  pixelWidthY / 2, depth+1, 3, colorMD, colorBR);
         }
     }
 
 
-    int R = (colorMD.getR() + colorTL.getR() + colorTR.getR() + colorBL.getR() + colorBR.getR()) / 5;
-    int G = (colorMD.getG() + colorTL.getG() + colorTR.getG() + colorBL.getG() + colorBR.getG()) / 5;
-    int B = (colorMD.getB() + colorTL.getB() + colorTR.getB() + colorBL.getB() + colorBR.getB()) / 5;
+    int R = ((colorMD.getR() + colorTL.getR()) / 2
+             + (colorMD.getR() + colorTR.getR()) / 2
+             + (colorMD.getR() + colorBL.getR()) / 2
+             + (colorMD.getR() + colorBR.getR()) / 2) / 4;
+    int G = ((colorMD.getG() + colorTL.getG()) / 2
+             + (colorMD.getG() + colorTR.getG()) / 2
+             + (colorMD.getG() + colorBL.getG()) / 2
+             + (colorMD.getG() + colorBR.getG()) / 2) / 4;
+    int B = ((colorMD.getB() + colorTL.getB()) / 2
+             + (colorMD.getB() + colorTR.getB()) / 2
+             + (colorMD.getB() + colorBL.getB()) / 2
+             + (colorMD.getB() + colorBR.getB()) / 2) / 4;
     return {R, G, B};
 }
 
