@@ -8,6 +8,7 @@
 #include "Camera/Camera.h"
 #include "Camera/Orto/OrthogonalCamera.h"
 #include "Camera/Persp/PerspectiveCamera.h"
+#include "Structures/LimitedPlane/LimitedPlane.h"
 
 void readVector(const Vector3 &vector3) {
     std::cout << "[ " << vector3.getX() << " " << vector3.getY() << " " << vector3.getZ() << " ]" << std::endl;
@@ -79,15 +80,46 @@ void task1() {
 }
 
 void task2() {
-    Structure* sphere = new Sphere(Vector3(0, 0, 0), 100,LightIntensity::BLUE());
-    Structure* sphere2 = new Sphere(Vector3(-150, 0, -100), 100,LightIntensity::RED());
-    OrthogonalCamera ort = OrthogonalCamera(Vector3(0,0,200),Vector3(0,0,-1),Vector3(0,1,0),500,500, OrthogonalSampler(12));
-    PerspectiveCamera perspectiveCamera = PerspectiveCamera(Vector3(0,0,200),Vector3(0,0,-1),Vector3(0,1,0),200,500,500,PerspectiveSampler(12));
+    Structure *sphere = new Sphere(Vector3(0, 0, 0), 80, LightIntensity::BLUE());
+    Structure *sphere2 = new Sphere(Vector3(-120, 0, -200), 80, LightIntensity::RED());
+
+    OrthogonalCamera ort = OrthogonalCamera(Vector3(0, 0, 400), Vector3(0, 0, -1), Vector3(0, 1, 0), 600, 600,
+                                            OrthogonalSampler(4));
+    PerspectiveCamera perspectiveCamera = PerspectiveCamera(Vector3(0, 0, 400), Vector3(0, 0, -1), Vector3(0, 1, 0),
+                                                            400, 400, 400, PerspectiveSampler(4));
     Scene scene = Scene();
     scene.setBackgroundColor(LightIntensity::BLACK());
+    for (int i = 0; i < 6; i++) {
+        for (int j = 0; j < 6; j++) {
+            LightIntensity color;
+            if(j == 5){
+                color = LightIntensity(51*i,0,0);
+            }
+            if(j == 4){
+                color = LightIntensity(0,51*i,0);
+            }
+            if(j == 3){
+                color = LightIntensity(0,0,51*i);
+            }
+            if(j == 2){
+                color = LightIntensity(255,0,51*i);
+            }
+            if(j == 1){
+                color = LightIntensity(0,255,51*i);
+            }
+            if(j == 0){
+                color = LightIntensity(255,255,51*i);
+            }
+            scene.addStructure(new LimitedPlane(Vector3(0, 0, -1), Vector3(0, 0, -200), color,
+                                                Vector3(-300 + (j * 100), 300 - (i * 100), -200),
+                                                Vector3(-200 + (j * 100), 300 - (i * 100) , -200),
+                                                Vector3(-300 + (j * 100), 200 - (i * 100), -200),
+                                                Vector3(-200 + (j * 100), 200 - (i * 100), -200)));
+        }
+    }
     scene.addStructure(sphere);
     scene.addStructure(sphere2);
-    auto test2 = ort.renderScene(scene,500,500);
+    auto test2 = ort.renderScene(scene, 500, 500);
     auto test3 = perspectiveCamera.renderScene(scene,500,500);
     test2.save("orthogonal.bmp");
     test3.save("perspective.bmp");

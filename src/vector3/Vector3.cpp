@@ -48,7 +48,7 @@ Vector3 Vector3::sum(const Vector3 &obj) {
     return Vector3(this->x + obj.x, this->y + obj.y, this->z + obj.z);
 }
 
-Vector3 Vector3::sub(const Vector3 &obj) {
+Vector3 Vector3::sub(const Vector3 &obj)  const {
     return Vector3(this->x - obj.x, this->y - obj.y, this->z - obj.z);
 }
 
@@ -75,7 +75,7 @@ Vector3 Vector3::multiplyVector(const Vector3 &vector3) const {
             this->x * vector3.y - this->y * vector3.x);
 }
 
-float Vector3::multiplyScalar(const Vector3 &vector3) const {
+float Vector3::multiplyScalar( Vector3 vector3) const {
     return (this->x * vector3.x + this->y * vector3.y + this->z * vector3.z);
 }
 
@@ -91,7 +91,7 @@ Vector3 Vector3::operator+(const Vector3 &obj) {
     return sum(obj);
 }
 
-Vector3 Vector3::operator-(const Vector3 &obj) {
+Vector3 Vector3::operator-(const Vector3 &obj) const {
     return sub(obj);
 }
 
@@ -180,4 +180,8 @@ Vector3 Vector3::getNormalized(){
         throw DivisionException();
     }
     return this->div(n);
+}
+
+Vector3 Vector3::operator-(Vector3 obj) {
+    return sub(obj);
 }

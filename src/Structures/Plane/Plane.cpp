@@ -75,4 +75,4 @@ Plane::Plane(const Vector3 &normalVector, const Vector3 &point, LightIntensity &
                                                                                          distance(calculateDistance(
                                                                                                  normalVector, point)),
                                                                                          Structure(
-                                                                                                 LightIntensity::BLACK()) {}
+                                                                                                 color) {}

@@ -36,11 +36,11 @@ public:
     Vector3(Vector3 const &vector3);
 
     Vector3 sum(const Vector3& obj);
-    Vector3 sub(const Vector3& obj);
+    Vector3 sub(const Vector3& obj) const;
     Vector3 multiply(float k);
     Vector3 multiply(const Vector3& vector3);
     Vector3 multiplyVector(const Vector3& vector3) const;
-    float multiplyScalar(const Vector3& vector3) const;
+    float multiplyScalar( Vector3 vector3) const;
     Vector3 div(float k);
     Vector3 div(const Vector3& vector3);
     void normalize();
@@ -49,7 +49,8 @@ public:
     Vector3 operator + ();
     Vector3 operator - ();
     Vector3 operator + (const Vector3& obj);
-    Vector3 operator - (const Vector3& obj);
+    Vector3 operator - (const Vector3& obj) const;
+    Vector3 operator - ( Vector3 obj);
     Vector3 operator * (const Vector3& obj);
     Vector3 operator * (float k);
     Vector3 operator / (const Vector3& obj);
