@@ -60,10 +60,6 @@ PerspectiveSampler::doSampling(const Scene &scene, const Vector3& center,Vector3
                                  pixelWidthY / 2, 1, 3, colorMD, colorBR);
         }
     }
-    if(colorBR != colorMD || colorBL != colorMD || colorTL != colorMD || colorTR != colorMD){
-        std::cout<<"bang \n";
-    }
-
     int R = ((colorMD.getR() + colorTL.getR()) / 2
              + (colorMD.getR() + colorTR.getR()) / 2
              + (colorMD.getR() + colorBL.getR()) / 2
