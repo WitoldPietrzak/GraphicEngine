@@ -18,8 +18,7 @@ std::vector<Vector3> Triangle::intersections(Ray ray) const {
         auto fa = a - intersection;
         auto fb = b - intersection;
         auto fc = c - intersection;
-        Vector3 crossVector = Vector3(0, 0, 0);
-        crossVector = fa.multiplyVector(fb);
+        Vector3 crossVector = fa.multiplyVector(fb);
         if (crossVector.multiplyScalar(plane.getNormalVector()) < MINUS_ZERO) {
             continue;
         }
