@@ -9,6 +9,7 @@
 #include "Camera/Orto/OrthogonalCamera.h"
 #include "Camera/Persp/PerspectiveCamera.h"
 #include "Structures/LimitedPlane/LimitedPlane.h"
+#include "Structures/Triangle/Triangle.h"
 
 void readVector(const Vector3 &vector3) {
     std::cout << "[ " << vector3.getX() << " " << vector3.getY() << " " << vector3.getZ() << " ]" << std::endl;
@@ -128,7 +129,32 @@ void task2() {
 
 }
 
+void task3() {
+    Structure *sphere = new Sphere(Vector3(0, 0, 0), 80, LightIntensity::BLUE());
+    Structure *sphere2 = new Sphere(Vector3(-120, 0, -200), 80, LightIntensity::RED());
+    Structure *triangle = new Triangle(Vector3(-50,-50,0),Vector3(50,-50,0),Vector3(0,50,0),LightIntensity::WHITE());
+    Structure *triangle2 = new Triangle(Vector3(0,-80,0),Vector3(90,-100,0),Vector3(50,20,0),LightIntensity::RED());
+
+    OrthogonalCamera ort = OrthogonalCamera(Vector3(0, 0, -400), Vector3(0, 0, 1), Vector3(0, 1, 0), 600, 600,
+                                            OrthogonalSampler(4));
+    PerspectiveCamera perspectiveCamera = PerspectiveCamera(Vector3(0, 0, -400), Vector3(0, 0, 1), Vector3(0, 1, 0),
+                                                            400, 400, 400, PerspectiveSampler(4));
+    Scene scene = Scene();
+    scene.setBackgroundColor(LightIntensity::BLACK());
+//    scene.addStructure(sphere);
+//    scene.addStructure(sphere2);
+    scene.addStructure(triangle);
+    scene.addStructure(triangle2);
+    auto test2 = ort.renderScene(scene, 500, 500);
+    auto test3 = perspectiveCamera.renderScene(scene,500,500);
+    test2.save("orthogonal-triangle.bmp");
+    test3.save("perspective-triangle.bmp");
+
+
+
+}
+
 int main() {
-    task2();
+    task3();
     return 0;
 }
