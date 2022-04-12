@@ -182,10 +182,10 @@ void task3() {
 
 }
 
-void task3_teapot() {
+void task3(std::string name) {
 
     ObjParser parser = ObjParser();
-    Structure *mesh = parser.parse("teapot.obj");
+    Structure *mesh = parser.parse(name);
 
     OrthogonalCamera ort = OrthogonalCamera(Vector3(0, 0, -4), Vector3(0, 0, 1), Vector3(0, 1, 0), 4, 4,
                                             OrthogonalSampler(4));
@@ -200,15 +200,41 @@ void task3_teapot() {
     auto test2 = ort.renderScene(scene, 500, 500);
     auto test3 = perspectiveCamera.renderScene(scene,500,500);
     auto test4 = perspectiveCamera2.renderScene(scene,500,500);
+    test2.save("orthogonal-custom.bmp");
+    test3.save("perspective-custom.bmp");
+    test4.save("perspective-custom-angle.bmp");
+
+
+
+}
+
+void task3_teapot() {
+
+    ObjParser parser = ObjParser();
+    Structure *mesh = parser.parse("teapot.obj");
+
+    OrthogonalCamera ort = OrthogonalCamera(Vector3(0, 0, -4), Vector3(0, 0, 1), Vector3(0, 1, 0), 4, 4,
+                                            OrthogonalSampler(0));
+    PerspectiveCamera perspectiveCamera = PerspectiveCamera(Vector3(0, 0, -4), Vector3(0, 0, 1), Vector3(0, 1, 0),
+                                                            4, 4, 4, PerspectiveSampler(0));
+    PerspectiveCamera perspectiveCamera2 = PerspectiveCamera(Vector3(-sqrtf(2), 2, -sqrtf(2)), Vector3(1, -1, 1).getNormalized(), Vector3(0, 1, 0),
+                                                             4, 4, 4, PerspectiveSampler(0));
+    Scene scene = Scene();
+    mesh->setColor(LightIntensity::RED());
+    scene.addStructure(mesh);
+    scene.setBackgroundColor(LightIntensity::BLACK());
+    auto test2 = ort.renderScene(scene, 256, 256);
+//    auto test3 = perspectiveCamera.renderScene(scene,256,256);
+//    auto test4 = perspectiveCamera2.renderScene(scene,256,256);
     test2.save("orthogonal-teapot.bmp");
-    test3.save("perspective-teapot.bmp");
-    test4.save("perspective-teapot-angle.bmp");
+//    test3.save("perspective-teapot.bmp");
+//    test4.save("perspective-teapot-angle.bmp");
 
 
 
 }
 
 int main() {
-    task3();
+    task3("ostroslup.obj");
     return 0;
 }

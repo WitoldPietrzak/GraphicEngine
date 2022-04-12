@@ -34,6 +34,7 @@ std::vector<Vector3> Mesh::intersections(Ray ray) const {
         std::vector<Vector3> currentIntersections = triangle->intersections(ray);
         for (auto &intersection: currentIntersections) {
             intersections.push_back(intersection);
+            return intersections;
         }
     }
     return intersections;
