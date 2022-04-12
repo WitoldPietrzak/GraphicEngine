@@ -19,7 +19,8 @@ std::vector<Vector3> Plane::intersections(Ray ray) const {
     auto ndotv = this->normalVector.multiplyScalar(ray.getDirection());
     if (ndotv == 0) {
         if (belongs(ray.getOrigin())) {
-            throw InfiniteIntersectionException();
+//            throw InfiniteIntersectionException();
+            return std::vector<Vector3>();
         }
         return std::vector<Vector3>();
     }

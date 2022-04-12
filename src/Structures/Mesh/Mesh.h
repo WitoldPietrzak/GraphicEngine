@@ -9,11 +9,17 @@
 #include <vector>
 #include "../Triangle/Triangle.h"
 
-class Mesh {
+class Mesh: public Structure{
 private:
     std::vector<Triangle*> triangles;
 public:
-    explicit Mesh(std::vector<Triangle *> triangles);
+    Mesh(const LightIntensity &color, std::vector<Triangle *> triangles);
+
+    Mesh(std::vector<Triangle *> triangles);
+
+    Mesh(const LightIntensity &color);
+
+    Mesh();
 
     virtual ~Mesh();
 
@@ -23,6 +29,9 @@ public:
 
     void addTriangle(Triangle* triangle);
     void removeTriangle(Triangle* triangle);
+
+    std::vector<Vector3> intersections(Ray ray) const override;
+
 
 };
 

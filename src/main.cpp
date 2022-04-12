@@ -10,6 +10,8 @@
 #include "Camera/Persp/PerspectiveCamera.h"
 #include "Structures/LimitedPlane/LimitedPlane.h"
 #include "Structures/Triangle/Triangle.h"
+#include "ObjParser/ObjParser.h"
+#include <cmath>
 
 void readVector(const Vector3 &vector3) {
     std::cout << "[ " << vector3.getX() << " " << vector3.getY() << " " << vector3.getZ() << " ]" << std::endl;
@@ -129,7 +131,7 @@ void task2() {
 
 }
 
-void task3() {
+void task3_test() {
     Structure *sphere = new Sphere(Vector3(0, 0, 0), 80, LightIntensity::BLUE());
     Structure *sphere2 = new Sphere(Vector3(-120, 0, -200), 80, LightIntensity::RED());
     Structure *triangle = new Triangle(Vector3(-50,-50,0),Vector3(50,-50,0),Vector3(0,50,0),LightIntensity::WHITE());
@@ -149,6 +151,58 @@ void task3() {
     auto test3 = perspectiveCamera.renderScene(scene,500,500);
     test2.save("orthogonal-triangle.bmp");
     test3.save("perspective-triangle.bmp");
+
+
+
+}
+
+void task3() {
+
+    ObjParser parser = ObjParser();
+    Structure *mesh = parser.parse("object.obj");
+
+    OrthogonalCamera ort = OrthogonalCamera(Vector3(0, 0, -4), Vector3(0, 0, 1), Vector3(0, 1, 0), 4, 4,
+                                            OrthogonalSampler(4));
+    PerspectiveCamera perspectiveCamera = PerspectiveCamera(Vector3(0, 0, -4), Vector3(0, 0, 1), Vector3(0, 1, 0),
+                                                            4, 4, 4, PerspectiveSampler(4));
+    PerspectiveCamera perspectiveCamera2 = PerspectiveCamera(Vector3(-sqrtf(2), 2, -sqrtf(2)), Vector3(1, -1, 1).getNormalized(), Vector3(0, 1, 0),
+                                                            4, 4, 4, PerspectiveSampler(4));
+    Scene scene = Scene();
+    mesh->setColor(LightIntensity::RED());
+    scene.addStructure(mesh);
+    scene.setBackgroundColor(LightIntensity::BLACK());
+    auto test2 = ort.renderScene(scene, 500, 500);
+    auto test3 = perspectiveCamera.renderScene(scene,500,500);
+    auto test4 = perspectiveCamera2.renderScene(scene,500,500);
+    test2.save("orthogonal-mesh.bmp");
+    test3.save("perspective-mesh.bmp");
+    test4.save("perspective-mesh-angle.bmp");
+
+
+
+}
+
+void task3_teapot() {
+
+    ObjParser parser = ObjParser();
+    Structure *mesh = parser.parse("teapot.obj");
+
+    OrthogonalCamera ort = OrthogonalCamera(Vector3(0, 0, -4), Vector3(0, 0, 1), Vector3(0, 1, 0), 4, 4,
+                                            OrthogonalSampler(4));
+    PerspectiveCamera perspectiveCamera = PerspectiveCamera(Vector3(0, 0, -4), Vector3(0, 0, 1), Vector3(0, 1, 0),
+                                                            4, 4, 4, PerspectiveSampler(4));
+    PerspectiveCamera perspectiveCamera2 = PerspectiveCamera(Vector3(-sqrtf(2), 2, -sqrtf(2)), Vector3(1, -1, 1).getNormalized(), Vector3(0, 1, 0),
+                                                             4, 4, 4, PerspectiveSampler(4));
+    Scene scene = Scene();
+    mesh->setColor(LightIntensity::RED());
+    scene.addStructure(mesh);
+    scene.setBackgroundColor(LightIntensity::BLACK());
+    auto test2 = ort.renderScene(scene, 500, 500);
+    auto test3 = perspectiveCamera.renderScene(scene,500,500);
+    auto test4 = perspectiveCamera2.renderScene(scene,500,500);
+    test2.save("orthogonal-teapot.bmp");
+    test3.save("perspective-teapot.bmp");
+    test4.save("perspective-teapot-angle.bmp");
 
 
 
