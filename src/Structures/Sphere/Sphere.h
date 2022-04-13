@@ -37,6 +37,7 @@ public:
 
     Sphere(const Vector3& center, float radius, LightIntensity color);
 
+    void move(Vector3 &direction) override;
 
 
 };

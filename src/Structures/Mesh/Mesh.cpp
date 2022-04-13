@@ -47,3 +47,10 @@ Mesh::Mesh(std::vector<Triangle *> triangles) : triangles(std::move(triangles)) 
 Mesh::Mesh(const LightIntensity &color) : Structure(color) {}
 
 Mesh::Mesh():triangles(std::vector<Triangle *>()) {}
+
+void Mesh::move(Vector3 &direction) {
+    for(auto &triangle: triangles){
+        triangle->move(direction);
+    }
+
+}

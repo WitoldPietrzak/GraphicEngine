@@ -27,6 +27,8 @@ public:
 
     void setColor(const LightIntensity &color);
 
+    virtual void move(Vector3 &direction)  = 0;
+
 
 };
 

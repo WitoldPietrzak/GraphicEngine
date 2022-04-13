@@ -41,6 +41,7 @@ public:
 
     bool belongs(const Vector3& point) const;
 
+    void move(Vector3 &direction) override;
 
 
 };

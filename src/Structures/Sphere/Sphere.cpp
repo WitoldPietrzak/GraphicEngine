@@ -64,4 +64,10 @@ bool Sphere::inside(const Vector3 &point) const {
            powf(point.getZ() - this->getCenter().getZ(), 2) - powl(this->getRadius(), 2) < 0;
 }
 
-Sphere::Sphere(const Vector3& center, float radius, LightIntensity color): center(center), radius(radius),Structure(color) {}
+Sphere::Sphere(const Vector3 &center, float radius, LightIntensity color) : center(center), radius(radius),
+                                                                            Structure(color) {}
+
+void Sphere::move(Vector3 &direction) {
+    setCenter(center + direction);
+
+}

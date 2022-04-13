@@ -70,3 +70,10 @@ void Triangle::setC(const Vector3 &c) {
 const Vector3 &Triangle::getNormalVector() const {
     return plane.getNormalVector();
 }
+
+void Triangle::move(Vector3& direction) {
+    setA(a+direction);
+    setB(b+direction);
+    setC(c+direction);
+    plane.move(direction);
+}

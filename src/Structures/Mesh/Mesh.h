@@ -32,6 +32,8 @@ public:
 
     std::vector<Vector3> intersections(Ray ray) const override;
 
+    void move(Vector3 &direction) override;
+
 
 };
 

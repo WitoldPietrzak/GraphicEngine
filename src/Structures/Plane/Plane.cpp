@@ -77,3 +77,9 @@ Plane::Plane(const Vector3 &normalVector, const Vector3 &point, LightIntensity &
                                                                                                  normalVector, point)),
                                                                                          Structure(
                                                                                                  color) {}
+
+void Plane::move(Vector3 &direction) {
+        //TODO Sprawdzić czy to działa
+    setDistance(calculateDistance(normalVector,(normalVector*distance)+direction));
+
+}

@@ -57,3 +57,11 @@ LimitedPlane::LimitedPlane(const Vector3 &normalVector, const Vector3 &point, Li
                            const Vector3 &pointLt, const Vector3 &pointRt, const Vector3 &pointLb,
                            const Vector3 &pointRb) : Plane(normalVector, point, color), pointLT(pointLt),
                                                      pointRT(pointRt), pointLB(pointLb), pointRB(pointRb) {}
+
+void LimitedPlane::move(Vector3 &direction) {
+    setPointLt(pointLT + direction);
+    setPointRt(pointRT + direction);
+    setPointLb(pointLB + direction);
+    setPointRb(pointRB + direction);
+    Plane::move(direction);
+}

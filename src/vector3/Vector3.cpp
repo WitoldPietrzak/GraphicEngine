@@ -44,7 +44,7 @@ float Vector3::getLengthSquared() const {
     return powf(this->x, 2.0f) + powf(this->y, 2.0f) + powf(this->z, 2.0f);
 }
 
-Vector3 Vector3::sum(const Vector3 &obj) {
+Vector3 Vector3::sum(const Vector3 &obj) const {
     return Vector3(this->x + obj.x, this->y + obj.y, this->z + obj.z);
 }
 
@@ -87,7 +87,7 @@ Vector3 Vector3::operator-() {
     return Vector3(-this->x, -this->y, -this->z);
 }
 
-Vector3 Vector3::operator+(const Vector3 &obj) {
+Vector3 Vector3::operator+(const Vector3 &obj) const {
     return sum(obj);
 }
 

@@ -34,6 +34,8 @@ public:
 
     const Vector3 &getNormalVector() const;
 
+    void move( Vector3 &direction) override;
+
 };
 
 
