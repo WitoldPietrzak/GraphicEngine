@@ -34,7 +34,7 @@ Vector3::Vector3(float x, float y, float z) : x(x), y(y), z(z) {}
 
 Vector3::Vector3(const Vector3 &v1, const Vector3 &v2) : x(v2.x - v1.x), y(v2.y - v1.y), z(v2.z - v1.z) {}
 
-Vector3::Vector3(Vector3 const &vector3) : x(vector3.x), y(vector3.y), z(vector3.z) {}
+Vector3::Vector3(Vector3 const &vector3) = default;
 
 float Vector3::getLength() const {
     return sqrtf(powf(this->x, 2.0f) + powf(this->y, 2.0f) + powf(this->z, 2.0f));
@@ -184,4 +184,8 @@ Vector3 Vector3::getNormalized(){
 
 Vector3 Vector3::operator-(Vector3 obj) {
     return sub(obj);
+}
+
+Vector3 Vector3::bisectingVector(Vector3 vector1, Vector3 vector2) {
+    return vector1*vector2.getLength()+vector2*vector1.getLength();
 }
