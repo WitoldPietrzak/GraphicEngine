@@ -18,7 +18,7 @@ public:
 
     Triangle(const Vector3 &a, const Vector3 &b, const Vector3 &c,const LightIntensity &color);
 
-    std::vector<Vector3> intersections(Ray ray) const override;
+    std::vector<Intersection> intersections(Ray ray) const override;
 
     const Vector3 &getA() const;
 
@@ -32,7 +32,9 @@ public:
 
     void setC(const Vector3 &c);
 
-    const Vector3 &getNormalVector() const;
+    Vector3 getNormalVector() const;
+
+    Vector3 getNormalVector(Vector3 point) const override;
 
 };
 

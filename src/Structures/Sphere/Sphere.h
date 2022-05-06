@@ -26,7 +26,7 @@ public:
 
     void setRadius(float radius);
 
-    std::vector<Vector3> intersections(Ray ray) const override;
+    std::vector<Intersection> intersections(Ray ray) const override;
 
     bool belongs(const Vector3& point) const;
     bool inside(const Vector3& point) const;
@@ -37,6 +37,7 @@ public:
 
     Sphere(const Vector3& center, float radius, LightIntensity color);
 
+    Vector3 getNormalVector(Vector3 point) const override;
 
 
 };

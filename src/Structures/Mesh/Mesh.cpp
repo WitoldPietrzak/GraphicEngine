@@ -6,6 +6,7 @@
 
 #include <utility>
 #include<bits/stdc++.h>
+#include "../../Intersection/Intersection.h"
 
 std::vector<Triangle *> Mesh::getTriangles() const {
     return triangles;
@@ -28,10 +29,10 @@ void Mesh::removeTriangle(Triangle *triangle) {
 
 Mesh::~Mesh() = default;
 
-std::vector<Vector3> Mesh::intersections(Ray ray) const {
-    std::vector<Vector3> intersections = std::vector<Vector3>();
+std::vector<Intersection> Mesh::intersections(Ray ray) const {
+    std::vector<Intersection> intersections = std::vector<Intersection>();
     for (auto &triangle: triangles) {
-        std::vector<Vector3> currentIntersections = triangle->intersections(ray);
+        std::vector<Intersection> currentIntersections = triangle->intersections(ray);
         for (auto &intersection: currentIntersections) {
             intersections.push_back(intersection);
         }
@@ -47,3 +48,18 @@ Mesh::Mesh(std::vector<Triangle *> triangles) : triangles(std::move(triangles)) 
 Mesh::Mesh(const LightIntensity &color) : Structure(color) {}
 
 Mesh::Mesh():triangles(std::vector<Triangle *>()) {}
+
+Vector3 Mesh::getNormalVector(Vector3 point) const {
+    for(auto &triangle: triangles){
+        return Vector3(0,0,0);
+        //TODO
+    }
+    return Vector3(0,0,0);
+}
+
+void Mesh::setColor(const LightIntensity &color) {
+    Structure::setColor(color);
+    for(auto &triangle: triangles){
+        triangle->setColor(color);
+    }
+}

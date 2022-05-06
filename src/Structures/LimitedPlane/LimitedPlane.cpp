@@ -3,6 +3,7 @@
 //
 
 #include "LimitedPlane.h"
+#include "../../Intersection/Intersection.h"
 
 
 const Vector3 &LimitedPlane::getPointLt() const {
@@ -37,20 +38,20 @@ void LimitedPlane::setPointRb(const Vector3 &pointRb) {
     pointRB = pointRb;
 }
 
-std::vector<Vector3> LimitedPlane::intersections(Ray ray) const {
+std::vector<Intersection> LimitedPlane::intersections(Ray ray) const {
     auto points = Plane::intersections(ray);
     if (points.empty()) {
         return points;
     }
     auto point = points[0];
-    auto RT = pointLT.multiplyScalar(pointRT - pointLT) <= point.multiplyScalar(pointRT - pointLT);
-    auto RB = point.multiplyScalar(pointRT - pointLT) <= pointRT.multiplyScalar(pointRT - pointLT);
-    auto LT = pointLT.multiplyScalar(pointLB - pointLT) <= point.multiplyScalar(pointLB - pointLT);
-    auto LB = point.multiplyScalar(pointLB - pointLT) <= pointLB.multiplyScalar(pointLB - pointLT);
+    auto RT = pointLT.multiplyScalar(pointRT - pointLT) <= point.getPoint().multiplyScalar(pointRT - pointLT);
+    auto RB = point.getPoint().multiplyScalar(pointRT - pointLT) <= pointRT.multiplyScalar(pointRT - pointLT);
+    auto LT = pointLT.multiplyScalar(pointLB - pointLT) <= point.getPoint().multiplyScalar(pointLB - pointLT);
+    auto LB = point.getPoint().multiplyScalar(pointLB - pointLT) <= pointLB.multiplyScalar(pointLB - pointLT);
     if (RT && LB && RB && LT) {
         return points;
     }
-    return std::vector<Vector3>();
+    return std::vector<Intersection>();
 }
 
 LimitedPlane::LimitedPlane(const Vector3 &normalVector, const Vector3 &point, LightIntensity color,

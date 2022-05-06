@@ -5,6 +5,7 @@
 #include <vector>
 #include "Plane.h"
 #include "../../Exceptions/InfiniteIntersectionException.h"
+#include "../../Intersection/Intersection.h"
 
 Vector3 Plane::getNormalVector() const {
     return normalVector;
@@ -14,25 +15,25 @@ void Plane::setNormalVector(Vector3 normalVector) {
     Plane::normalVector = normalVector;
 }
 
-std::vector<Vector3> Plane::intersections(Ray ray) const {
+std::vector<Intersection> Plane::intersections(Ray ray) const {
     auto ndotxr = this->normalVector.multiplyScalar(ray.getOrigin());
     auto ndotv = this->normalVector.multiplyScalar(ray.getDirection());
     if (ndotv == 0) {
         if (belongs(ray.getOrigin())) {
 //            throw InfiniteIntersectionException();
-            return std::vector<Vector3>();
+            return std::vector<Intersection>();
         }
-        return std::vector<Vector3>();
+        return std::vector<Intersection>();
     }
 
     auto t = (this->distance - ndotxr) / ndotv;
     if (t < 0) {
-        return std::vector<Vector3>();
+        return std::vector<Intersection>();
     }
     auto intersectionPoint = ray.getOrigin() + ray.getDirection() * t;
-    std::vector<Vector3> intersections;
-    intersections.push_back(intersectionPoint);
-
+    std::vector<Intersection> intersections;
+    auto intersection = Intersection(intersectionPoint, (Structure &) *this);
+    intersections.push_back(intersection);
     return intersections;
 }
 
@@ -77,3 +78,7 @@ Plane::Plane(const Vector3 &normalVector, const Vector3 &point, LightIntensity &
                                                                                                  normalVector, point)),
                                                                                          Structure(
                                                                                                  color) {}
+
+Vector3 Plane::getNormalVector(Vector3 point) const {
+    return normalVector;
+}

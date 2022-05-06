@@ -3,6 +3,7 @@
 //
 
 #include "Sphere.h"
+#include "../../Intersection/Intersection.h"
 #include <cmath>
 #include <vector>
 
@@ -27,9 +28,9 @@ Sphere::Sphere(Vector3 center, float radius) : center(center), radius(radius) {}
 
 Sphere::Sphere(const Sphere &sphere) : center(sphere.center), radius(sphere.radius) {}
 
-std::vector<Vector3> Sphere::intersections(Ray ray) const {
+std::vector<Intersection> Sphere::intersections(Ray ray) const {
 
-    std::vector<Vector3> intersections = std::vector<Vector3>();
+    std::vector<Intersection> intersections = std::vector<Intersection>();
 
     //
     auto v = this->getCenter() - ray.getOrigin();
@@ -42,14 +43,17 @@ std::vector<Vector3> Sphere::intersections(Ray ray) const {
     auto det1 = b - sqrtDelta;
     auto det2 = b + sqrtDelta;
     if (sqrtDelta == 0) {
-        intersections.push_back(ray.getPointInDistance(det1));
+        auto intersection = Intersection(ray.getPointInDistance(det1), (Structure &) *this);
+        intersections.push_back(intersection);
         return intersections;
     }
     if (det1 > 0) {
-        intersections.push_back(ray.getPointInDistance(det1));
+        auto intersection = Intersection(ray.getPointInDistance(det1), (Structure &) *this);
+        intersections.push_back(intersection);
     }
     if (det2 > 0) {
-        intersections.push_back(ray.getPointInDistance(det2));
+        auto intersection = Intersection(ray.getPointInDistance(det2), (Structure &) *this);
+        intersections.push_back(intersection);
     }
     return intersections;
 }
@@ -65,3 +69,7 @@ bool Sphere::inside(const Vector3 &point) const {
 }
 
 Sphere::Sphere(const Vector3& center, float radius, LightIntensity color): center(center), radius(radius),Structure(color) {}
+
+Vector3 Sphere::getNormalVector(Vector3 point) const {
+    return (center-point).getNormalized();
+}

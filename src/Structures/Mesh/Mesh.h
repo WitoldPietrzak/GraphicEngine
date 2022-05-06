@@ -30,7 +30,11 @@ public:
     void addTriangle(Triangle* triangle);
     void removeTriangle(Triangle* triangle);
 
-    std::vector<Vector3> intersections(Ray ray) const override;
+    std::vector<Intersection> intersections(Ray ray) const override;
+
+    Vector3 getNormalVector(Vector3 point) const override;
+
+    void setColor(const LightIntensity &color) override;
 
 
 };

@@ -35,7 +35,7 @@ public:
 
     void setPointRb(const Vector3 &pointRb);
 
-    std::vector<Vector3> intersections(Ray ray) const override;
+    std::vector<Intersection> intersections(Ray ray) const override;
 };
 
 

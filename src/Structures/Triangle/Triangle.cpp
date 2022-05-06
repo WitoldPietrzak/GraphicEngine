@@ -3,21 +3,22 @@
 //
 
 #include "Triangle.h"
+#include "../../Intersection/Intersection.h"
 
 #define PLUS_ZERO 0.00001
 #define MINUS_ZERO -0.0001
 
-std::vector<Vector3> Triangle::intersections(Ray ray) const {
+std::vector<Intersection> Triangle::intersections(Ray ray) const {
 
     auto planeIntersections = plane.intersections(ray);
     if (planeIntersections.empty()) {
         return planeIntersections;
     }
-    auto triangleIntersections = std::vector<Vector3>();
+    auto triangleIntersections = std::vector<Intersection>();
     for (auto &intersection : planeIntersections) {
-        auto fa = a - intersection;
-        auto fb = b - intersection;
-        auto fc = c - intersection;
+        auto fa = a - intersection.getPoint();
+        auto fb = b - intersection.getPoint();
+        auto fc = c - intersection.getPoint();
         Vector3 crossVector = fa.multiplyVector(fb);
         if (crossVector.multiplyScalar(plane.getNormalVector()) < MINUS_ZERO) {
             continue;
@@ -30,6 +31,7 @@ std::vector<Vector3> Triangle::intersections(Ray ray) const {
         if (crossVector.multiplyScalar(plane.getNormalVector()) < MINUS_ZERO) {
             continue;
         }
+        intersection.setStructure(*this);
         triangleIntersections.push_back(intersection);
     }
     return triangleIntersections;
@@ -67,6 +69,11 @@ void Triangle::setC(const Vector3 &c) {
     Triangle::c = c;
 }
 
-const Vector3 &Triangle::getNormalVector() const {
+Vector3 Triangle::getNormalVector() const {
+
     return plane.getNormalVector();
+}
+
+Vector3 Triangle::getNormalVector(Vector3 point) const {
+    return getNormalVector();
 }

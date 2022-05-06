@@ -33,7 +33,7 @@ public:
 
     Plane(const Vector3 &normalVector, const Vector3 &point, LightIntensity &color);
 
-    std::vector<Vector3> intersections(Ray ray) const override;
+    std::vector<Intersection> intersections(Ray ray) const override;
 
     static float calculateDistance (Vector3 normalVector, const Vector3& point);
 
@@ -41,6 +41,7 @@ public:
 
     bool belongs(const Vector3& point) const;
 
+    Vector3 getNormalVector(Vector3 point) const override;
 
 
 };
