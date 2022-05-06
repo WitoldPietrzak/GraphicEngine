@@ -17,7 +17,6 @@ Image PerspectiveCamera::renderScene(const Scene &scene, int width, int height) 
     auto pixelSizeY = this->getFovY() / image.getHeight();
     for (int i = 0; i < image.getHeight(); i++) {
         for (int j = 0; j < image.getWidth(); j++) {
-            // TODO sampling
             auto rayTarget = imageTopLeft+(vectorX*pixelSizeX*j)-(vectorY*pixelSizeY*i)+(vectorX*pixelSizeX/2.0f)-(vectorY*pixelSizeY/2.0f);
             auto color = sampler.doSampling(scene, this->position, rayTarget, vectorX, vectorY, pixelSizeX, pixelSizeY);
             image.setPixel(j, i, color);

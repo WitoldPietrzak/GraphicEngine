@@ -17,7 +17,6 @@ Image OrthogonalCamera::renderScene(const Scene &scene, int width, int height) {
     auto vectorY = this->upVector;
     for (int i = 0; i < image.getHeight(); i++) {
         for (int j = 0; j < image.getWidth(); j++) {
-            // TODO sampling
             auto origin = this->position + (vectorY * this->getHeight() / 2.0f) - (vectorX * this->getWidth() / 2.0f) -
                           (vectorY * i * pixelSizeY) + (vectorX * j * pixelSizeX);
 
