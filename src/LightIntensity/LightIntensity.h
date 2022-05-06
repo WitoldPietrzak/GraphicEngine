@@ -43,10 +43,15 @@ public:
 
     LightIntensity div(float num);
 
-    LightIntensity multiply(float num);
+    LightIntensity multiply(const float &num) const;
+
+    LightIntensity multiply(LightIntensity &li);
+
+    LightIntensity multiply(const LightIntensity &li);
 
     bool equals(LightIntensity &li);
 
+    LightIntensity fitInRange();
 
     static LightIntensity BLACK();
 
@@ -66,7 +71,10 @@ public:
 
     LightIntensity operator-(int num);
 
-    LightIntensity operator/(float num);
+    LightIntensity operator*(float num);
+
+    LightIntensity operator*(LightIntensity &li);
+    LightIntensity operator*(const LightIntensity &li);
 
     void operator+=(LightIntensity &li);
 

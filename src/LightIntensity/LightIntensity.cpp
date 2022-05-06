@@ -2,34 +2,35 @@
 // Created by Witek on 22.03.2022.
 //
 
+#include <algorithm>
 #include "LightIntensity.h"
 
 LightIntensity::LightIntensity(int r, int g, int b) : r(r), g(g), b(b) {}
 
-LightIntensity::LightIntensity():r(0),g(0),b(0) {}
+LightIntensity::LightIntensity() : r(0), g(0), b(0) {}
 
 int LightIntensity::getR() const {
-    return r;
+    return std::max(0, std::min(this->r, 255));
 }
 
 void LightIntensity::setR(int r) {
-    LightIntensity::r = r;
+    this->r = r;
 }
 
 int LightIntensity::getG() const {
-    return g;
+    return std::max(0, std::min(this->g, 255));;
 }
 
 void LightIntensity::setG(int g) {
-    LightIntensity::g = g;
+    this->g = g;
 }
 
 int LightIntensity::getB() const {
-    return b;
+    return std::max(0, std::min(this->b, 255));;
 }
 
 void LightIntensity::setB(int b) {
-    LightIntensity::b = b;
+    this->b = b;
 }
 
 void LightIntensity::add(int R, int G, int B) {
@@ -42,6 +43,18 @@ void LightIntensity::add(LightIntensity &li) {
     this->setR(this->getR() + li.getR());
     this->setG(this->getG() + li.getG());
     this->setB(this->getB() + li.getB());
+}
+
+LightIntensity LightIntensity::multiply(const float &num) const {
+    return LightIntensity{(int)(r * num), (int)(g * num), (int)(b * num)};
+}
+
+LightIntensity LightIntensity::multiply(LightIntensity &li) {
+    return {(int)(r * li.r/255.0f), (int)(g * li.g/255.0f), (int)(b * li.b/255.0f)};
+}
+
+LightIntensity LightIntensity::multiply(const LightIntensity &li) {
+    return {(int)(r * li.r/255.0f), (int)(g * li.g/255.0f), (int)(b * li.b/255.0f)};
 }
 
 LightIntensity LightIntensity::BLACK() {
@@ -110,6 +123,18 @@ bool LightIntensity::operator==(LightIntensity &li) {
 
 bool LightIntensity::operator!=(LightIntensity &li) {
     return !equals(li);
+}
+
+LightIntensity LightIntensity::operator*(float num) {
+    return multiply(num);
+}
+
+LightIntensity LightIntensity::operator*(LightIntensity &li) {
+    return multiply(li);
+}
+
+LightIntensity LightIntensity::operator*(const LightIntensity &li) {
+    return multiply(li);
 }
 
 
