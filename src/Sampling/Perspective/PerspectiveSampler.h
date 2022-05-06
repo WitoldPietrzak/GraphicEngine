@@ -12,6 +12,10 @@
 class PerspectiveSampler {
 private:
     int maxDepth;
+
+
+    LightIntensity sampleDiffuse(const Scene &scene, const Intersection& intersection);
+    LightIntensity sampleSpecular(const Scene &scene, const Intersection& intersection, const Vector3 cameraPosition);
 public:
     PerspectiveSampler();
 

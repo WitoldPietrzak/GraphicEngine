@@ -3,6 +3,10 @@
 //
 
 #include "OrthogonalSampler.h"
+#include "../../Intersection/Intersection.h"
+#include <cmath>
+
+#define PLUS_ZERO 0.00001
 
 LightIntensity
 OrthogonalSampler::doSampling(const Scene &scene, Vector3 center, const Vector3 &target, Vector3 vectorX,
@@ -61,22 +65,40 @@ OrthogonalSampler::doSampling(const Scene &scene, Vector3 center, const Vector3 
 }
 
 LightIntensity OrthogonalSampler::sampleRay(const Ray &ray, const Scene &scene) {
-    LightIntensity color = scene.getBackgroundColor();
     float distance = -1;
+    Structure *nearestStructure = nullptr;
+    Intersection *nearestIntersection = nullptr;
+    auto intersections = std::vector<Intersection>();
     for (auto &structure: scene.getStructures()) {
         auto currentIntersections = structure->intersections(ray);
         if (currentIntersections.empty()) {
             continue;
         }
         for (auto &intersection: currentIntersections) {
-            auto currentDistance = (intersection - ray.getOrigin()).getLength();
+            auto currentDistance = (intersection.getPoint() - ray.getOrigin()).getLength();
             if (currentDistance < distance || distance == -1) {
                 distance = currentDistance;
-                color = structure->getColor();
+                nearestStructure = structure;
+                intersections.clear();
+                intersections.push_back(intersection);
+                nearestIntersection = &intersection;
             }
         }
     }
-    return color;
+    if (nearestStructure == nullptr) {
+        return scene.getBackgroundColor();
+    }
+    nearestIntersection = &intersections[0];
+    LightIntensity diffuseLight = sampleDiffuse(scene, *nearestIntersection);
+    diffuseLight = diffuseLight.multiply(nearestStructure->getMaterial().getDiffuse());
+
+    LightIntensity specularLight = sampleSpecular(scene, *nearestIntersection, ray.getOrigin());
+    specularLight = specularLight.multiply(nearestStructure->getMaterial().getSpecular());
+
+    LightIntensity ambientLight = scene.getAmbient();
+    ambientLight = ambientLight.multiply(nearestStructure->getMaterial().getAmbient());
+
+    return (ambientLight + diffuseLight + specularLight).multiply(nearestStructure->getColor());
 }
 
 LightIntensity
@@ -184,4 +206,81 @@ int OrthogonalSampler::getMaxDepth() const {
 
 void OrthogonalSampler::setMaxDepth(int maxDepth) {
     OrthogonalSampler::maxDepth = maxDepth;
+}
+
+LightIntensity OrthogonalSampler::sampleDiffuse(const Scene &scene, const Intersection &intersection) {
+
+    auto lightSources = scene.getLightSources();
+    auto diffuse = LightIntensity::BLACK();
+    auto normal = intersection.getStructure().getNormalVector(intersection.getPoint());
+
+    for (auto &lightSource: lightSources) {
+        bool inShadow = false;
+        auto lightVector = (lightSource->getPosition() - intersection.getPoint()).getNormalized();
+        auto ray = Ray(intersection.getPoint(), lightVector.getNormalized());
+        for (auto &structure: scene.getStructures()) {
+            auto intersections = structure->intersections(ray);
+            if (!intersections.empty() && structure != &intersection.getStructure()) {
+                for(auto &inersect: intersections){
+                    if((inersect.getPoint()-intersection.getPoint()).getLength() > PLUS_ZERO){
+                        inShadow = true;
+                        break;
+                    }
+                }
+                if(inShadow){
+                    break;
+                }
+
+            }
+        }
+        if (inShadow) {
+            continue;
+        }
+
+        auto color = lightSource->getLightIntensity();
+        color = color.multiply(std::max(-normal.multiplyScalar(lightVector), 0.0f));
+        diffuse += color;
+
+    }
+
+    return diffuse;
+}
+
+LightIntensity
+OrthogonalSampler::sampleSpecular(const Scene &scene, const Intersection &intersection, const Vector3 cameraPosition) {
+    auto lightSources = scene.getLightSources();
+    auto specular = LightIntensity::BLACK();
+    auto normal = intersection.getStructure().getNormalVector(intersection.getPoint());
+
+    for (auto &lightSource: lightSources) {
+        bool inShadow = false;
+        auto lightVector = (lightSource->getPosition() - intersection.getPoint()).getNormalized();
+        auto cameraVector = (cameraPosition-intersection.getPoint()).getNormalized();
+        auto bisectingVector = Vector3::bisectingVector(cameraVector,lightVector).getNormalized();
+        auto ray = Ray(intersection.getPoint(), lightVector.getNormalized());
+        for (auto &structure: scene.getStructures()) {
+            auto intersections = structure->intersections(ray);
+            if (!intersections.empty() && structure != &intersection.getStructure()) {
+                for(auto &inersect: intersections){
+                    if((inersect.getPoint()-intersection.getPoint()).getLength() > PLUS_ZERO){
+                        inShadow = true;
+                        break;
+                    }
+                }
+                if(inShadow){
+                    break;
+                }
+
+            }
+        }
+        if (inShadow) {
+            continue;
+        }
+
+        auto color = lightSource->getLightIntensity();
+        color = color.multiply(powf(std::max(normal.multiplyScalar(-bisectingVector),0.0f),32));
+        specular += color;
+
+    }
+    return specular;
 }
