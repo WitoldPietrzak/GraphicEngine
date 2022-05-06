@@ -10,12 +10,16 @@
 #include "../../Vector3/Vector3.h"
 #include "../../Ray/Ray.h"
 #include "../../LightIntensity/LightIntensity.h"
+#include "../../Material/Material.h"
+
+class Intersection;
 
 class Structure {
 protected:
-    LightIntensity color;
+    LightIntensity color = LightIntensity::BLACK();
+    Material material = Material(0.1,0.5,0.5);
 public:
-    virtual std::vector<Vector3> intersections(Ray ray) const = 0;
+    virtual std::vector<Intersection> intersections(Ray ray) const = 0;
 
     explicit Structure(const LightIntensity &color);
 
@@ -25,7 +29,13 @@ public:
 
     const LightIntensity &getColor() const;
 
-    void setColor(const LightIntensity &color);
+    virtual void setColor(const LightIntensity &color);
+
+    const Material &getMaterial() const;
+
+    void setMaterial(const Material &material);
+
+    virtual Vector3 getNormalVector(Vector3 point) const = 0;
 
 
 };

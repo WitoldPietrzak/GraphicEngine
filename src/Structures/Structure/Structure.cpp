@@ -3,6 +3,7 @@
 //
 
 #include "Structure.h"
+#include "../../Intersection/Intersection.h"
 
 Structure::Structure(const LightIntensity &color) : color(color) {}
 
@@ -20,4 +21,12 @@ Structure::Structure() {
 
 Structure::~Structure() {
 
+}
+
+const Material &Structure::getMaterial() const {
+    return material;
+}
+
+void Structure::setMaterial(const Material &material) {
+    Structure::material = material;
 }
