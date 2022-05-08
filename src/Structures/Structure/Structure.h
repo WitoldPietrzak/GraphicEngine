@@ -17,7 +17,7 @@ class Intersection;
 class Structure {
 protected:
     LightIntensity color = LightIntensity::BLACK();
-    Material material = Material(0.1,0.5,0.5);
+    Material material = Material(0.3,0.5,0.5);
 public:
     virtual std::vector<Intersection> intersections(Ray ray) const = 0;
 
@@ -33,7 +33,7 @@ public:
 
     const Material &getMaterial() const;
 
-    void setMaterial(const Material &material);
+    virtual void setMaterial(const Material &material);
 
     virtual Vector3 getNormalVector(Vector3 point) const = 0;
 
