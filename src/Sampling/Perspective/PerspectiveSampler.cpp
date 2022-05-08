@@ -252,7 +252,7 @@ LightIntensity PerspectiveSampler::sampleDiffuse(const Scene &scene, const Inter
         }
 
         auto color = lightSource->getLightIntensity();
-        color = color.multiply(std::max(normal.multiplyScalar(lightVector), 0.0f));
+        color = color.multiply(std::max(-normal.multiplyScalar(lightVector), 0.0f));
         diffuse += color;
 
     }
@@ -293,7 +293,7 @@ PerspectiveSampler::sampleSpecular(const Scene &scene, const Intersection &inter
         }
 
         auto color = lightSource->getLightIntensity();
-        color = color.multiply(powf(std::max(normal.multiplyScalar(bisectingVector), 0.0f), 128));
+        color = color.multiply(powf(std::max(normal.multiplyScalar(-bisectingVector), 0.0f), 128));
         specular += color;
 
     }
