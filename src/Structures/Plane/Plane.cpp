@@ -54,8 +54,11 @@ Plane::Plane(const Vector3 &normalVector, const Vector3 &point) : normalVector(n
 
 
 float Plane::calculateDistance(Vector3 normalVector, const Vector3 &point) {
-    return (normalVector *
-            (normalVector.multiplyScalar(point) / normalVector.multiplyScalar(normalVector))).getLength();
+//    return (normalVector *
+//            (normalVector.multiplyScalar(point) / normalVector.multiplyScalar(normalVector))).getLength();
+auto distance = ((normalVector.getX()*point.getX())+(normalVector.getY()*point.getY())+(normalVector.getZ()*point.getZ()))/normalVector.getLength();
+    return distance;
+
 }
 
 float Plane::calculateDistance(Vector3 point) {
