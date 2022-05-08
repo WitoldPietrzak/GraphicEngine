@@ -62,4 +62,13 @@ void Mesh::setColor(const LightIntensity &color) {
     for(auto &triangle: triangles){
         triangle->setColor(color);
     }
+
+
+}
+
+void Mesh::setMaterial(const Material &material) {
+    Structure::setMaterial(material);
+    for(auto &triangle: triangles){
+        triangle->setMaterial(material);
+    }
 }

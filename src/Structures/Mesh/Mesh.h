@@ -36,6 +36,8 @@ public:
 
     void setColor(const LightIntensity &color) override;
 
+    void setMaterial(const Material &material) override;
+
 
 };
 
