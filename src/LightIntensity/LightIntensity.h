@@ -63,6 +63,8 @@ public:
 
     static LightIntensity BLUE();
 
+    static LightIntensity YELLOW();
+
     LightIntensity operator+(LightIntensity &li);
 
     LightIntensity operator+(int num);

@@ -46,15 +46,15 @@ void LightIntensity::add(LightIntensity &li) {
 }
 
 LightIntensity LightIntensity::multiply(const float &num) const {
-    return LightIntensity{(int)(r * num), (int)(g * num), (int)(b * num)};
+    return LightIntensity{(int) (r * num), (int) (g * num), (int) (b * num)};
 }
 
 LightIntensity LightIntensity::multiply(LightIntensity &li) {
-    return {(int)(r * li.r/255.0f), (int)(g * li.g/255.0f), (int)(b * li.b/255.0f)};
+    return {(int) (r * li.r / 255.0f), (int) (g * li.g / 255.0f), (int) (b * li.b / 255.0f)};
 }
 
 LightIntensity LightIntensity::multiply(const LightIntensity &li) {
-    return {(int)(r * li.r/255.0f), (int)(g * li.g/255.0f), (int)(b * li.b/255.0f)};
+    return {(int) (r * li.r / 255.0f), (int) (g * li.g / 255.0f), (int) (b * li.b / 255.0f)};
 }
 
 LightIntensity LightIntensity::BLACK() {
@@ -75,6 +75,10 @@ LightIntensity LightIntensity::GREEN() {
 
 LightIntensity LightIntensity::BLUE() {
     return {0, 0, 255};
+}
+
+LightIntensity LightIntensity::YELLOW() {
+    return LightIntensity(255, 255, 0);
 }
 
 LightIntensity LightIntensity::sum(LightIntensity &li) {
