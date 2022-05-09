@@ -236,7 +236,7 @@ LightIntensity PerspectiveSampler::sampleDiffuse(const Scene &scene, const Inter
             auto intersections = structure->intersections(ray);
             if (!intersections.empty() && structure != &intersection.getStructure()) {
                 for (auto &inersect: intersections) {
-                    if ((inersect.getPoint() - intersection.getPoint()).getLength() > PLUS_ZERO) {
+                    if ((inersect.getPoint() - intersection.getPoint()).getLength() > PLUS_ZERO && (inersect.getPoint()-intersection.getPoint()).getLength() < (lightSource->getPosition()- intersection.getPoint()).getLength()) {
                         inShadow = true;
                         break;
                     }
@@ -277,7 +277,7 @@ PerspectiveSampler::sampleSpecular(const Scene &scene, const Intersection &inter
             auto intersections = structure->intersections(ray);
             if (!intersections.empty() && structure != &intersection.getStructure()) {
                 for (auto &inersect: intersections) {
-                    if ((inersect.getPoint() - intersection.getPoint()).getLength() > PLUS_ZERO) {
+                    if ((inersect.getPoint() - intersection.getPoint()).getLength() > PLUS_ZERO && (inersect.getPoint()-intersection.getPoint()).getLength() < (lightSource->getPosition()- intersection.getPoint()).getLength()) {
                         inShadow = true;
                         break;
                     }

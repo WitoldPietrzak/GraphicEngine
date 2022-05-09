@@ -222,7 +222,7 @@ LightIntensity OrthogonalSampler::sampleDiffuse(const Scene &scene, const Inters
             auto intersections = structure->intersections(ray);
             if (!intersections.empty() && structure != &intersection.getStructure()) {
                 for(auto &inersect: intersections){
-                    if((inersect.getPoint()-intersection.getPoint()).getLength() > PLUS_ZERO){
+                    if ((inersect.getPoint() - intersection.getPoint()).getLength() > PLUS_ZERO && (inersect.getPoint()-intersection.getPoint()).getLength() < (lightSource->getPosition()- intersection.getPoint()).getLength()) {
                         inShadow = true;
                         break;
                     }
@@ -262,7 +262,7 @@ OrthogonalSampler::sampleSpecular(const Scene &scene, const Intersection &inters
             auto intersections = structure->intersections(ray);
             if (!intersections.empty() && structure != &intersection.getStructure()) {
                 for(auto &inersect: intersections){
-                    if((inersect.getPoint()-intersection.getPoint()).getLength() > PLUS_ZERO){
+                    if ((inersect.getPoint() - intersection.getPoint()).getLength() > PLUS_ZERO && (inersect.getPoint()-intersection.getPoint()).getLength() < (lightSource->getPosition()- intersection.getPoint()).getLength()) {
                         inShadow = true;
                         break;
                     }
