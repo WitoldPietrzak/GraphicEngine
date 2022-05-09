@@ -48,6 +48,10 @@ Vector3 Vector3::sum(const Vector3 &obj) {
     return Vector3(this->x + obj.x, this->y + obj.y, this->z + obj.z);
 }
 
+Vector3 Vector3::sum(float k) {
+    return Vector3(this->x + k, this->y + k, this->z + k);
+}
+
 Vector3 Vector3::sub(const Vector3 &obj)  const {
     return Vector3(this->x - obj.x, this->y - obj.y, this->z - obj.z);
 }
@@ -89,6 +93,10 @@ Vector3 Vector3::operator-() {
 
 Vector3 Vector3::operator+(const Vector3 &obj) {
     return sum(obj);
+}
+
+Vector3 Vector3::operator+(float k) {
+    return sum(k);
 }
 
 Vector3 Vector3::operator-(const Vector3 &obj) const {
@@ -165,7 +173,8 @@ bool Vector3::operator!=(const Vector3 &obj) {
 void Vector3::normalize() {
     float n = this->getLength();
     if (n == 0) {
-        throw DivisionException();
+        return;
+//        throw DivisionException();
     }
 
     auto result = this->div(n);
@@ -177,7 +186,8 @@ void Vector3::normalize() {
 Vector3 Vector3::getNormalized(){
     float n = this->getLength();
     if (n == 0) {
-        throw DivisionException();
+        return this->multiply(n);
+//        throw DivisionException();
     }
     return this->div(n);
 }

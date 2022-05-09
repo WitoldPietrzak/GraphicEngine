@@ -37,6 +37,8 @@ public:
 
     Vector3 sum(const Vector3 &obj);
 
+    Vector3 sum(float k);
+
     Vector3 sub(const Vector3 &obj) const;
 
     Vector3 multiply(float k);
@@ -68,6 +70,8 @@ public:
 
     Vector3 operator+(const Vector3 &obj);
 
+    Vector3 operator+(float k);
+
     Vector3 operator-(const Vector3 &obj) const;
 
     Vector3 operator-(Vector3 obj);
@@ -95,8 +99,6 @@ public:
     void operator*=(float k);
 
     void operator/=(float k);
-
-
 };
 
 
