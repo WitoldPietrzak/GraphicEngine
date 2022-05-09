@@ -15,6 +15,7 @@ private:
 
     LightIntensity sampleDiffuse(const Scene &scene, const Intersection& intersection);
     LightIntensity sampleSpecular(const Scene &scene, const Intersection& intersection, const Vector3 cameraPosition);
+    void sampleSpecularAndDiffuse(const Scene &scene, const Intersection& intersection, const Vector3& cameraPosition, LightIntensity &specular, LightIntensity &diffuse);
 public:
     OrthogonalSampler();
 
