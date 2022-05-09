@@ -11,6 +11,7 @@
 #include "Structures/LimitedPlane/LimitedPlane.h"
 #include "Structures/Triangle/Triangle.h"
 #include "ObjParser/ObjParser.h"
+#include "Light/SurfaceLight/SurfaceLight.h"
 #include <cmath>
 
 void readVector(const Vector3 &vector3) {
@@ -187,32 +188,42 @@ void task3(std::string name) {
     ObjParser parser = ObjParser();
     Structure *mesh = parser.parse(name);
     Structure *sphere = new Sphere(Vector3(-0.75,0.5,0.5),0.2,LightIntensity::RED());
-    auto *light = new PointLight(LightIntensity(250,25,250), Vector3(0.5,0.5,-4));
+    Structure *plane = new Plane(Vector3(0,0,1), Vector3(0,0,10));
+    Structure *plane2 = new Plane(Vector3(0,-1,0), Vector3(0,0,0));
+    plane->setColor(LightIntensity(255,255,255));
+    plane2->setColor(LightIntensity(0,255,0));
+    auto *light = new PointLight(LightIntensity(255,255,255), Vector3(0.5,1.5,-2));
+    auto *light2 = new SurfaceLight(Vector3(0.5,1.5, -3), Vector3(3,0,0),Vector3(0,1,0),2);
 
-    OrthogonalCamera ort = OrthogonalCamera(Vector3(0, 0, -4), Vector3(0, 0, 1), Vector3(0, 1, 0), 4, 4,
-                                            OrthogonalSampler(4));
+    OrthogonalCamera orthogonalFront = OrthogonalCamera(Vector3(0, 0, -7), Vector3(0, 0, 1), Vector3(0, 1, 0), 8, 8,
+                                                        OrthogonalSampler(4));
+
+    OrthogonalCamera orthogonalAngle = OrthogonalCamera(Vector3(-sqrtf(4), 2, -sqrtf(4)), Vector3(1, -1, 1).getNormalized(), Vector3(0, 1, 0), 4, 4,
+                                                        OrthogonalSampler(4));
+
     PerspectiveCamera perspectiveCamera = PerspectiveCamera(Vector3(0, 0, -4), Vector3(0, 0, 1), Vector3(0, 1, 0),
-                                                            4, 4, 4, PerspectiveSampler(4));
-    PerspectiveCamera perspectiveCamera2 = PerspectiveCamera(Vector3(-sqrtf(2), 2, -sqrtf(2)), Vector3(1, -1, 1).getNormalized(), Vector3(0, 1, 0),
-                                                             4, 4, 4, PerspectiveSampler(4));
+                                                            4, 6, 6, PerspectiveSampler(4));
 
-    OrthogonalCamera orthogonalCamera = OrthogonalCamera(Vector3(-sqrtf(4), 2, -sqrtf(4)), Vector3(1, -1, 1).getNormalized(), Vector3(0, 1, 0), 4, 4,
-                                                         OrthogonalSampler(4));
+    PerspectiveCamera perspectiveCamera2 = PerspectiveCamera(Vector3(2, 1, -4), (Vector3(0, 0.5, 0)-Vector3(2, 1, -4)).getNormalized(), Vector3(0, 1, 0),
+                                                             4, 8, 8, PerspectiveSampler(4));
     Scene scene = Scene();
     mesh->setColor(LightIntensity::BLUE());
     scene.addStructure(mesh);
     scene.addStructure(sphere);
-    scene.setBackgroundColor(LightIntensity::BLACK());
-    scene.setAmbient(LightIntensity(88,255,145));
+    scene.addStructure(plane);
+    scene.addStructure(plane2);
+    scene.setBackgroundColor(LightIntensity::WHITE());
+    scene.setAmbient(LightIntensity(255,255,255));
     scene.addLightSource(light);
-    auto test2 = ort.renderScene(scene, 500, 500);
+//    scene.addLightSource(light2);
+//    auto test2 = orthogonalFront.renderScene(scene, 1000, 1000);
 //    auto test3 = perspectiveCamera.renderScene(scene,500,500);
-//    auto test4 = perspectiveCamera2.renderScene(scene,500,500);
-//    auto test5 = orthogonalCamera.renderScene(scene,500,500);
-    test2.save("orthogonal-custom.bmp");
+    auto test4 = perspectiveCamera2.renderScene(scene,500,500);
+//    auto test5 = orthogonalAngle.renderScene(scene,500,500);
+//    test2.save("orthogonal-custom.bmp");
 //    test5.save("orthogonal-custom-angle.bmp");
 //    test3.save("perspective-custom.bmp");
-//    test4.save("perspective-custom-angle.bmp");
+    test4.save("perspective-custom-angle.bmp");
 
 
 
@@ -223,7 +234,7 @@ void task3_teapot() {
     ObjParser parser = ObjParser();
     Structure *mesh = parser.parse("teapot.obj");
 
-    OrthogonalCamera ort = OrthogonalCamera(Vector3(0, 0, -4), Vector3(0, 0, 1), Vector3(0, 1, 0), 4, 4,
+    OrthogonalCamera ort = OrthogonalCamera(Vector3(0, 1, -4), Vector3(0, 0, 1), Vector3(0, 1, 0), 5, 5,
                                             OrthogonalSampler(0));
     PerspectiveCamera perspectiveCamera = PerspectiveCamera(Vector3(0, 0, -4), Vector3(0, 0, 1), Vector3(0, 1, 0),
                                                             4, 4, 4, PerspectiveSampler(0));
@@ -233,16 +244,53 @@ void task3_teapot() {
     mesh->setColor(LightIntensity::RED());
     scene.addStructure(mesh);
     scene.setBackgroundColor(LightIntensity::BLACK());
-//    auto test2 = ort.renderScene(scene, 256, 256);
-    auto test3 = perspectiveCamera.renderScene(scene,256,256);
-    auto test4 = perspectiveCamera2.renderScene(scene,256,256);
-//    test2.save("orthogonal-teapot.bmp");
-    test3.save("perspective-teapot.bmp");
-    test4.save("perspective-teapot-angle.bmp");
+    scene.setAmbient(LightIntensity(255,255,255));
+    auto test2 = ort.renderScene(scene, 256, 256);
+//    auto test3 = perspectiveCamera.renderScene(scene,256,256);
+//    auto test4 = perspectiveCamera2.renderScene(scene,256,256);
+    test2.save("orthogonal-teapot.bmp");
+//    test3.save("perspective-teapot.bmp");
+//    test4.save("perspective-teapot-angle.bmp");
 
 
 
 }
+
+
+Scene generatescene1(std::string name){
+
+    //Obiekty
+    ObjParser parser = ObjParser();
+    Structure *mesh = parser.parse(name);
+    Structure *sphere = new Sphere(Vector3(-0.75,0.5,0.5),0.2,LightIntensity::RED());
+    Structure *plane = new Plane(Vector3(0,0,1), Vector3(0,0,10));
+    Structure *plane2 = new Plane(Vector3(0,1,0), Vector3(0,-0.5,0));
+
+    //Swiatlo
+    auto *light = new PointLight(LightIntensity(255,255,255), Vector3(0.5,0.5,-10));
+    auto *light2 = new SurfaceLight(Vector3(0.5,1.5, -3), Vector3(3,0,0),Vector3(0,1,0),2);
+
+    //Ustawienia
+    plane->setColor(LightIntensity(255,255,255));
+    plane2->setColor(LightIntensity(0,255,0));
+    mesh->setColor(LightIntensity::BLUE());
+    //Scena
+
+    Scene scene = Scene();
+
+    scene.addStructure(mesh);
+    scene.addStructure(sphere);
+    scene.addStructure(plane);
+    scene.addStructure(plane2);
+    scene.setBackgroundColor(LightIntensity::WHITE());
+    scene.setAmbient(LightIntensity(255,255,255));
+    scene.addLightSource(light);
+    scene.addLightSource(light2);
+
+    return scene;
+
+}
+
 
 int main() {
     task3("ostroslup.obj");
