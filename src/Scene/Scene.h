@@ -10,6 +10,7 @@
 #include "../Structures/Structure/Structure.h"
 #include "../Light/Light.h"
 #include "../Light/PointLight/PointLight.h"
+#include "../Light/SurfaceLight/SurfaceLight.h"
 
 class Scene {
 private:
@@ -51,7 +52,11 @@ public:
 
     void addLightSource(PointLight *light);
 
+    void addLightSource(SurfaceLight *light);
+
     void removeLightSource(PointLight *light);
+
+    void removeLightSource(SurfaceLight *light);
 };
 
 

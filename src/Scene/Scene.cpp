@@ -79,3 +79,16 @@ void Scene::removeLightSource(PointLight *light) {
     std::remove(this->lightSources.begin(), this->lightSources.end(), light);
 
 }
+
+void Scene::addLightSource(SurfaceLight *light) {
+    for (auto &pointLight: light->getPointLights()) {
+        addLightSource(pointLight);
+    }
+
+}
+
+void Scene::removeLightSource(SurfaceLight *light) {
+    for (auto &pointLight: light->getPointLights()) {
+        removeLightSource(pointLight);
+    }
+}
