@@ -4,7 +4,7 @@
 
 #include "Light.h"
 
-const LightIntensity &Light::getLightIntensity() const {
+const LightIntensity Light::getLightIntensity() const {
     return lightIntensity;
 }
 

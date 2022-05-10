@@ -12,6 +12,8 @@
 class PointLight: public Light{
 private:
     Vector3 position = {0,0,0};
+    float linAt =0;
+    float constAtt = 1;
 public:
     PointLight();
 
@@ -23,6 +25,15 @@ public:
 
     void setPosition(const Vector3 &position);
 
+    float getLinAt() const;
+
+    void setLinAt(float linAt);
+
+    float getConstAtt() const;
+
+    void setConstAtt(float constAtt);
+
+    LightIntensity getLightIntensity(Vector3 point);
 };
 
 

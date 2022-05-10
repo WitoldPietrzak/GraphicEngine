@@ -8,9 +8,10 @@
 
 class Material {
 private:
-    float ambient, specular, diffuse;
+    float ambient, specular, diffuse, smoothness;
 public:
-    Material(float ambient, float specular, float diffuse);
+
+    Material(float ambient, float specular, float diffuse, float smoothness);
 
     float getAmbient() const;
 
@@ -23,6 +24,10 @@ public:
     float getDiffuse() const;
 
     void setDiffuse(float diffuse);
+
+    float getSmoothness() const;
+
+    void setSmoothness(float smoothness);
 
 };
 

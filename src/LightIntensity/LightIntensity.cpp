@@ -57,6 +57,10 @@ LightIntensity LightIntensity::multiply(const LightIntensity &li) {
     return {(int) (r * li.r / 255.0f), (int) (g * li.g / 255.0f), (int) (b * li.b / 255.0f)};
 }
 
+LightIntensity LightIntensity::div(float num) const {
+    return LightIntensity{(int) (r / num), (int) (g / num), (int) (b / num)};
+}
+
 LightIntensity LightIntensity::BLACK() {
     return {0, 0, 0};
 }

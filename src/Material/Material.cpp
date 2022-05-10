@@ -28,5 +28,15 @@ void Material::setDiffuse(float diffuse) {
     Material::diffuse = diffuse;
 }
 
-Material::Material(float ambient, float specular, float diffuse) : ambient(ambient), specular(specular),
-                                                                   diffuse(diffuse) {}
+float Material::getSmoothness() const {
+    return smoothness;
+}
+
+void Material::setSmoothness(float smoothness) {
+    Material::smoothness = smoothness;
+}
+
+Material::Material(float ambient, float specular, float diffuse, float smoothness) : ambient(ambient),
+                                                                                     specular(specular),
+                                                                                     diffuse(diffuse),
+                                                                                     smoothness(smoothness) {}

@@ -9,12 +9,12 @@
 #include "../LightIntensity/LightIntensity.h"
 
 class Light {
-private:
+protected:
     LightIntensity lightIntensity = LightIntensity::WHITE();
 public:
     Light();
     Light(const LightIntensity &lightIntensity);
-    const LightIntensity &getLightIntensity() const;
+    const LightIntensity getLightIntensity() const;
     void setLightIntensity(const LightIntensity &lightIntensity);
 };
 

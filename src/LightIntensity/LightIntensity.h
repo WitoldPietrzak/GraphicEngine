@@ -41,7 +41,7 @@ public:
 
     LightIntensity sub(int sum);
 
-    LightIntensity div(float num);
+    LightIntensity div(float num) const;
 
     LightIntensity multiply(const float &num) const;
 
