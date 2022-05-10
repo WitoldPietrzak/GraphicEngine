@@ -49,3 +49,17 @@ SurfaceLight::SurfaceLight(const Vector3& point, const Vector3& v1, const Vector
         generateSurfaceLight(point, v1, v2, density)) {
 
 }
+
+void SurfaceLight::setLinAt(float linAt) {
+    for(auto& light: pointLights){
+        light->setLinAt(linAt);
+    }
+
+}
+
+void SurfaceLight::setConstAtt(float constAtt) {
+    for(auto& light: pointLights){
+        light->setConstAtt(constAtt);
+    }
+
+}

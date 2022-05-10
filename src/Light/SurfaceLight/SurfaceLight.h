@@ -24,6 +24,10 @@ public:
     std::vector<PointLight *> generateSurfaceLight(const Vector3& point, const Vector3& v1, const Vector3& v2, int density);
 
     const std::vector<PointLight *> &getPointLights() const;
+    
+    void setLinAt(float linAt);
+
+    void setConstAtt(float constAtt);
 
 
 };
