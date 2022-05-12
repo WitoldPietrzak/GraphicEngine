@@ -44,11 +44,11 @@ float Vector3::getLengthSquared() const {
     return powf(this->x, 2.0f) + powf(this->y, 2.0f) + powf(this->z, 2.0f);
 }
 
-Vector3 Vector3::sum(const Vector3 &obj) {
+Vector3 Vector3::sum(const Vector3 &obj) const {
     return Vector3(this->x + obj.x, this->y + obj.y, this->z + obj.z);
 }
 
-Vector3 Vector3::sum(float k) {
+Vector3 Vector3::sum(float k) const {
     return Vector3(this->x + k, this->y + k, this->z + k);
 }
 
@@ -56,11 +56,11 @@ Vector3 Vector3::sub(const Vector3 &obj)  const {
     return Vector3(this->x - obj.x, this->y - obj.y, this->z - obj.z);
 }
 
-Vector3 Vector3::multiply(float k) {
+Vector3 Vector3::multiply(float k) const {
     return Vector3(this->x * k, this->y * k, this->z * k);
 }
 
-Vector3 Vector3::div(float k) {
+Vector3 Vector3::div(float k) const {
     return Vector3(this->x / k, this->y / k, this->z / k);
 }
 
@@ -83,19 +83,19 @@ float Vector3::multiplyScalar( Vector3 vector3) const {
     return (this->x * vector3.x + this->y * vector3.y + this->z * vector3.z);
 }
 
-Vector3 Vector3::operator+() {
+Vector3 Vector3::operator+() const {
     return Vector3(this->x, this->y, this->z);
 }
 
-Vector3 Vector3::operator-() {
+Vector3 Vector3::operator-() const {
     return Vector3(-this->x, -this->y, -this->z);
 }
 
-Vector3 Vector3::operator+(const Vector3 &obj) {
+Vector3 Vector3::operator+(const Vector3 &obj) const {
     return sum(obj);
 }
 
-Vector3 Vector3::operator+(float k) {
+Vector3 Vector3::operator+(float k) const {
     return sum(k);
 }
 
@@ -107,7 +107,7 @@ Vector3 Vector3::operator*(const Vector3 &obj) {
     return multiply(obj);
 }
 
-Vector3 Vector3::operator*(float k) {
+Vector3 Vector3::operator*(float k) const {
     return multiply(k);
 }
 
@@ -115,7 +115,7 @@ Vector3 Vector3::operator/(const Vector3 &obj) {
     return div(obj);
 }
 
-Vector3 Vector3::operator/(float k) {
+Vector3 Vector3::operator/(float k) const {
     return div(k);
 }
 
@@ -164,6 +164,10 @@ void Vector3::operator/=(float k) {
 bool Vector3::operator==(const Vector3 &obj) {
     return (this->x == obj.x && this->y == obj.y && this->z == obj.z);
 
+}
+
+bool Vector3::operator==(const Vector3 &obj) const {
+    return (this->x == obj.x && this->y == obj.y && this->z == obj.z);
 }
 
 bool Vector3::operator!=(const Vector3 &obj) {

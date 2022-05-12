@@ -35,13 +35,13 @@ public:
 
     Vector3(const Vector3 &vector3);
 
-    Vector3 sum(const Vector3 &obj);
+    Vector3 sum(const Vector3 &obj) const;
 
-    Vector3 sum(float k);
+    Vector3 sum(float k) const;
 
     Vector3 sub(const Vector3 &obj) const;
 
-    Vector3 multiply(float k);
+    Vector3 multiply(float k) const;
 
     Vector3 multiply(const Vector3 &vector3);
 
@@ -49,7 +49,7 @@ public:
 
     float multiplyScalar(Vector3 vector3) const;
 
-    Vector3 div(float k);
+    Vector3 div(float k) const;
 
     Vector3 div(const Vector3 &vector3);
 
@@ -64,13 +64,13 @@ public:
 
     Vector3 rotatePoint(Vector3 center, Vector3 rotationVector, float number);
 
-    Vector3 operator+();
+    Vector3 operator+() const;
 
-    Vector3 operator-();
+    Vector3 operator-() const;
 
-    Vector3 operator+(const Vector3 &obj);
+    Vector3 operator+(const Vector3 &obj) const;
 
-    Vector3 operator+(float k);
+    Vector3 operator+(float k) const;
 
     Vector3 operator-(const Vector3 &obj) const;
 
@@ -78,11 +78,11 @@ public:
 
     Vector3 operator*(const Vector3 &obj);
 
-    Vector3 operator*(float k);
+    Vector3 operator*(float k) const;
 
     Vector3 operator/(const Vector3 &obj);
 
-    Vector3 operator/(float k);
+    Vector3 operator/(float k) const;
 
     void operator+=(const Vector3 &obj);
 
@@ -93,6 +93,8 @@ public:
     void operator/=(const Vector3 &obj);
 
     bool operator==(const Vector3 &obj);
+
+    bool operator==(const Vector3 &obj) const ;
 
     bool operator!=(const Vector3 &obj);
 
