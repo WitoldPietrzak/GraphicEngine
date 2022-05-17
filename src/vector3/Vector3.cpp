@@ -68,7 +68,7 @@ Vector3 Vector3::div(const Vector3 &vector3) {
     return Vector3(this->x / vector3.x, this->y / vector3.y, this->z / vector3.z);
 }
 
-Vector3 Vector3::multiply(const Vector3 &vector3) {
+Vector3 Vector3::multiply(const Vector3 &vector3) const {
     return Vector3(this->x * vector3.x, this->y * vector3.y, this->z * vector3.z);
 }
 
@@ -103,7 +103,7 @@ Vector3 Vector3::operator-(const Vector3 &obj) const {
     return sub(obj);
 }
 
-Vector3 Vector3::operator*(const Vector3 &obj) {
+Vector3 Vector3::operator*(const Vector3 &obj) const {
     return multiply(obj);
 }
 

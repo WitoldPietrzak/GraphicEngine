@@ -43,7 +43,7 @@ public:
 
     Vector3 multiply(float k) const;
 
-    Vector3 multiply(const Vector3 &vector3);
+    Vector3 multiply(const Vector3 &vector3) const;
 
     Vector3 multiplyVector(const Vector3 &vector3) const;
 
@@ -76,7 +76,7 @@ public:
 
     Vector3 operator-(Vector3 obj);
 
-    Vector3 operator*(const Vector3 &obj);
+    Vector3 operator*(const Vector3 &obj) const;
 
     Vector3 operator*(float k) const;
 
