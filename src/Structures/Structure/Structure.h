@@ -11,13 +11,14 @@
 #include "../../Ray/Ray.h"
 #include "../../LightIntensity/LightIntensity.h"
 #include "../../Material/Material.h"
+#include "../../LocalCoordinatesBase/LocalCoordinatesBase.h"
 
 class Intersection;
 
 class Structure {
 protected:
-    LightIntensity color = LightIntensity::BLACK();
-    Material material = Material(0.2,0.2,0.3, 128);
+    Material material = Material(0.3,0.5,0.5, 128);
+    LocalCoordinatesBase localCoordinatesBase = LocalCoordinatesBase();
 public:
     virtual std::vector<Intersection> intersections(Ray ray) const = 0;
 
@@ -35,7 +36,17 @@ public:
 
     virtual void setMaterial(const Material &material);
 
+    const LocalCoordinatesBase &getLocalCoordinatesBase() const;
+
+    void setLocalCoordinatesBase(const LocalCoordinatesBase &localCoordinatesBase);
+
+    LightIntensity getColor(const Vector3 &intersectionPoint);
+
     virtual Vector3 getNormalVector(Vector3 point) const = 0;
+
+
+
+    virtual void MapUV(const Vector3 &point, float &u, float &v) const = 0;
 
 
 };

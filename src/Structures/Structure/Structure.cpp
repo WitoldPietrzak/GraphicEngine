@@ -5,18 +5,18 @@
 #include "Structure.h"
 #include "../../Intersection/Intersection.h"
 
-Structure::Structure(const LightIntensity &color) : color(color) {}
+Structure::Structure(const LightIntensity &color) { material.setColor(color); }
 
 const LightIntensity &Structure::getColor() const {
-    return color;
+    return material.getColor();
 }
 
 void Structure::setColor(const LightIntensity &color) {
-    Structure::color = color;
+    material.setColor(color);
 }
 
 Structure::Structure() {
-    this->color = LightIntensity::BLACK();
+    material.getColor();
 }
 
 Structure::~Structure() {
@@ -29,4 +29,23 @@ const Material &Structure::getMaterial() const {
 
 void Structure::setMaterial(const Material &material) {
     Structure::material = material;
+}
+
+const LocalCoordinatesBase &Structure::getLocalCoordinatesBase() const {
+    return localCoordinatesBase;
+}
+
+void Structure::setLocalCoordinatesBase(const LocalCoordinatesBase &localCoordinatesBase) {
+    Structure::localCoordinatesBase = localCoordinatesBase;
+}
+
+LightIntensity Structure::getColor(const Vector3 &intersectionPoint) {
+    if (material.getMaterialType() == MaterialType::diffuse_texture) {
+        auto texture = material.getTexture();
+        float u, v;
+        this->MapUV(intersectionPoint, u, v);
+        return texture.getPixel(u, v);
+    }
+    return material.getColor();
+    return LightIntensity();
 }
