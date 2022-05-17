@@ -43,6 +43,8 @@ public:
 
     Vector3 getNormalVector(Vector3 point) const override;
 
+    void MapUV(const Vector3 &point, float &u, float &v) const override;
+
 
 };
 

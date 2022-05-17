@@ -38,6 +38,8 @@ public:
 
     void setMaterial(const Material &material) override;
 
+    void MapUV(const Vector3 &point, float &u, float &v) const override;
+
 
 };
 

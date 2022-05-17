@@ -85,3 +85,8 @@ Plane::Plane(const Vector3 &normalVector, const Vector3 &point, LightIntensity &
 Vector3 Plane::getNormalVector(Vector3 point) const {
     return normalVector;
 }
+
+void Plane::MapUV(const Vector3 &point, float &u, float &v) const {
+    return;
+
+}

@@ -77,3 +77,8 @@ Vector3 Triangle::getNormalVector() const {
 Vector3 Triangle::getNormalVector(Vector3 point) const {
     return getNormalVector();
 }
+
+void Triangle::MapUV(const Vector3 &point, float &u, float &v) const {
+    return;
+
+}

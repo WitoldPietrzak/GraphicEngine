@@ -68,8 +68,15 @@ bool Sphere::inside(const Vector3 &point) const {
            powf(point.getZ() - this->getCenter().getZ(), 2) - powl(this->getRadius(), 2) < 0;
 }
 
-Sphere::Sphere(const Vector3& center, float radius, LightIntensity color): center(center), radius(radius),Structure(color) {}
+Sphere::Sphere(const Vector3 &center, float radius, LightIntensity color) : center(center), radius(radius),
+                                                                            Structure(color) {}
 
 Vector3 Sphere::getNormalVector(Vector3 point) const {
-    return (center-point).getNormalized();
+    return (center - point).getNormalized();
+}
+
+void Sphere::MapUV(const Vector3 &point, float &u, float &v) const {
+    auto pointToCenterVector = (center - point).getNormalized();
+    u = 0.5f + atan2f(pointToCenterVector.getX(), pointToCenterVector.getZ()) / (2 * M_PI);
+    v = 0.5f + asin(pointToCenterVector.getY()) / (M_PI);
 }

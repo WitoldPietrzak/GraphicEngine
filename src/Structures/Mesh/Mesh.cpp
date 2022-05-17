@@ -72,3 +72,8 @@ void Mesh::setMaterial(const Material &material) {
         triangle->setMaterial(material);
     }
 }
+
+void Mesh::MapUV(const Vector3 &point, float &u, float &v) const {
+    return;
+
+}
