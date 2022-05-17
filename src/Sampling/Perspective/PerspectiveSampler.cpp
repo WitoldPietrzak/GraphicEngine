@@ -118,7 +118,8 @@ LightIntensity PerspectiveSampler::sampleRay(const Ray &ray, const Scene &scene)
     LightIntensity ambientLight = scene.getAmbient();
     ambientLight = ambientLight.multiply(nearestStructure->getMaterial().getAmbient());
 
-    return (ambientLight + diffuseLight + specularLight).multiply(nearestStructure->getColor());
+    return (ambientLight + diffuseLight + specularLight).multiply(
+            nearestStructure->getColor(nearestIntersection->getPoint()));
 }
 
 LightIntensity
