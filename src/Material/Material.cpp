@@ -40,3 +40,35 @@ Material::Material(float ambient, float specular, float diffuse, float smoothnes
                                                                                      specular(specular),
                                                                                      diffuse(diffuse),
                                                                                      smoothness(smoothness) {}
+
+float Material::getRefractionIndex() const {
+    return refractionIndex;
+}
+
+void Material::setRefractionIndex(float refractionIndex) {
+    Material::refractionIndex = refractionIndex;
+}
+
+MaterialType Material::getMaterialType() const {
+    return materialType;
+}
+
+void Material::setMaterialType(MaterialType materialType) {
+    Material::materialType = materialType;
+}
+
+const Image &Material::getTexture() const {
+    return texture;
+}
+
+void Material::setTexture(const Image &texture) {
+    Material::texture = texture;
+}
+
+const LightIntensity &Material::getColor() const {
+    return color;
+}
+
+void Material::setColor(const LightIntensity &color) {
+    Material::color = color;
+}
