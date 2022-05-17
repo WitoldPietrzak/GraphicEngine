@@ -7,6 +7,7 @@
 
 
 #include "../LightIntensity/LightIntensity.h"
+#include <string>
 
 class Image {
 private:
@@ -23,6 +24,8 @@ public:
 
     LightIntensity getPixel(int width, int height);
 
+    LightIntensity getPixel(float u, float v);
+
     void setPixel(int width, int height, LightIntensity color);
 
     int getWidth() const;
@@ -32,6 +35,8 @@ public:
     void print(const std::string& filename);
 
     void save(const std::string& filename);
+
+    static Image load(std::string& filename);
 
 };
 

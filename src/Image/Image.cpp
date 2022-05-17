@@ -65,3 +65,22 @@ void Image::save(const std::string &filename) {
     }
 
 }
+
+Image Image::load(std::string &filename) {
+    bitmap_image bmp = bitmap_image(filename);
+    Image image = Image(bmp.width(), bmp.height());
+    for (int i = 0; i < bmp.height(); i++) {
+        for (int j = 0; j < bmp.width(); j++) {
+
+            auto pixel = bmp.get_pixel(j, i);
+            image.setPixel(j, i, LightIntensity(pixel.red, pixel.green, pixel.blue));
+        }
+    }
+    return image;
+}
+
+LightIntensity Image::getPixel(float u, float v) {
+    int x = std::round((width - 1) * u);
+    int y = std::round((height - 1) * v);
+    return getPixel(x, y);
+}
