@@ -4,6 +4,7 @@
 
 #include "LimitedPlane.h"
 #include "../../Intersection/Intersection.h"
+#include "../../Exceptions/InfiniteIntersectionException.h"
 
 
 const Vector3 &LimitedPlane::getPointLt() const {
@@ -58,3 +59,41 @@ LimitedPlane::LimitedPlane(const Vector3 &normalVector, const Vector3 &point, Li
                            const Vector3 &pointLt, const Vector3 &pointRt, const Vector3 &pointLb,
                            const Vector3 &pointRb) : Plane(normalVector, point, color), pointLT(pointLt),
                                                      pointRT(pointRt), pointLB(pointLb), pointRB(pointRb) {}
+
+LimitedPlane::LimitedPlane(const Vector3 &pointLt, const Vector3 &pointRt,
+                           const Vector3 &pointLb, const Vector3 &pointRb)
+        : Plane(), pointLT(pointLt), pointRT(pointRt), pointLB(pointLb), pointRB(pointRb) { //TODO
+}
+
+LimitedPlane::LimitedPlane(const Vector3 &startPoint, const Vector3 &widthVector, const Vector3 &heightVector)
+        : Plane() {
+    Vector3 normalVector = widthVector.getNormalized().multiplyVector(heightVector.getNormalized());
+    if (normalVector.getLength() != 1) {
+        throw InfiniteIntersectionException();
+    }
+    setNormalVector(normalVector);
+    setDistance(calculateDistance(normalVector, startPoint));
+    pointLT = startPoint;
+    pointRT = startPoint + widthVector;
+    pointLB = startPoint + heightVector;
+    pointRB = startPoint + widthVector + heightVector;
+
+    localCoordinatesBase.setCenter(startPoint);
+    localCoordinatesBase.setRotationAxis(normalVector.getNormalized().multiplyVector(Vector3(0,0,1)).getNormalized());
+    localCoordinatesBase.setRotationAngle(Vector3::calculateAngle(Vector3(0, 0, 1), normalVector.getNormalized()));
+
+}
+
+float LimitedPlane::getWidth() const {
+    return (pointRT - pointLT).getLength();
+}
+
+float LimitedPlane::getHeight() const {
+    return (pointLB - pointLT).getLength();
+}
+
+void LimitedPlane::MapUV(const Vector3 &point, float &u, float &v) const {
+    auto localPoint = localCoordinatesBase.fromBaseCoordinates(point);
+    u = std::abs(localPoint.getX() / getWidth());
+    v = std::abs(localPoint.getY() / getHeight());
+}
