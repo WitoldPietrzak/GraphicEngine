@@ -25,6 +25,8 @@ public:
 
     void setDistance(float distance);
 
+    Plane();
+
     Plane(const Vector3 &normalVector, float distance);
 
     Plane(const Vector3 &normalVector, const Vector3 &point);
@@ -35,7 +37,7 @@ public:
 
     std::vector<Intersection> intersections(Ray ray) const override;
 
-    static float calculateDistance (Vector3 normalVector, const Vector3& point);
+    static float calculateDistance (const Vector3& normalVector, const Vector3& point);
 
     float calculateDistance(Vector3 point);
 
@@ -44,6 +46,8 @@ public:
     Vector3 getNormalVector(Vector3 point) const override;
 
     void MapUV(const Vector3 &point, float &u, float &v) const override;
+
+    void switchSide();
 
 
 };

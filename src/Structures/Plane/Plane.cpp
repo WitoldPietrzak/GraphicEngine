@@ -45,6 +45,8 @@ void Plane::setDistance(float distance) {
     Plane::distance = distance;
 }
 
+Plane::Plane(): normalVector(Vector3(0,1,0)), distance(0), Structure(LightIntensity::BLACK()) {}
+
 Plane::Plane(const Vector3 &normalVector, float distance) : normalVector(normalVector), distance(distance),
                                                             Structure(LightIntensity::BLACK()) {}
 
@@ -53,10 +55,8 @@ Plane::Plane(const Vector3 &normalVector, const Vector3 &point) : normalVector(n
                                                                   Structure(LightIntensity::BLACK()) {}
 
 
-float Plane::calculateDistance(Vector3 normalVector, const Vector3 &point) {
-//    return (normalVector *
-//            (normalVector.multiplyScalar(point) / normalVector.multiplyScalar(normalVector))).getLength();
-auto distance = ((normalVector.getX()*point.getX())+(normalVector.getY()*point.getY())+(normalVector.getZ()*point.getZ()))/normalVector.getLength();
+float Plane::calculateDistance(const Vector3& normalVector, const Vector3 &point) {
+auto distance = (normalVector.multiplyScalar(point))/normalVector.getLength();
     return distance;
 
 }
@@ -88,5 +88,11 @@ Vector3 Plane::getNormalVector(Vector3 point) const {
 
 void Plane::MapUV(const Vector3 &point, float &u, float &v) const {
     return;
+
+}
+
+void Plane::switchSide() {
+    distance = -distance;
+    normalVector = -normalVector;
 
 }
