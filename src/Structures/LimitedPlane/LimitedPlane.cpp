@@ -68,7 +68,7 @@ LimitedPlane::LimitedPlane(const Vector3 &pointLt, const Vector3 &pointRt,
 LimitedPlane::LimitedPlane(const Vector3 &startPoint, const Vector3 &widthVector, const Vector3 &heightVector)
         : Plane() {
     Vector3 normalVector = widthVector.getNormalized().multiplyVector(heightVector.getNormalized());
-    if (normalVector.getLength() != 1) {
+    if (normalVector.getLength() <0.999 || normalVector.getLength() > 1.01) {
         throw InfiniteIntersectionException();
     }
     setNormalVector(normalVector);

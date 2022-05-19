@@ -44,10 +44,10 @@ Vector3 LocalCoordinatesBase::toBaseCoordinates(const Vector3 &local) const {
 
 Vector3 LocalCoordinatesBase::fromBaseCoordinates(const Vector3 &global) const {
 
-    auto local = Quaternion::rotateVector(global, rotationAngle, rotationAxis);
+    auto rotationCenter = global - center;
 
-    //TODO IDK czy to powinno być przed czy po rotacji
-    local = local - center;
+    auto local = Quaternion::rotateVector(rotationCenter, rotationAngle, rotationAxis);
+
 
     return local;
 }
