@@ -37,12 +37,17 @@ void LocalCoordinatesBase::setRotationAngle(float rotationAngle) {
 
 Vector3 LocalCoordinatesBase::toBaseCoordinates(const Vector3 &local) const {
     auto global = Quaternion::rotateVector(local, -rotationAngle, rotationAxis);
+    global = global + center;
+
     return global;
 }
 
 Vector3 LocalCoordinatesBase::fromBaseCoordinates(const Vector3 &global) const {
 
     auto local = Quaternion::rotateVector(global, rotationAngle, rotationAxis);
+
+    //TODO IDK czy to powinno być przed czy po rotacji
+    local = local - center;
 
     return local;
 }

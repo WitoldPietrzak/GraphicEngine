@@ -11,7 +11,7 @@
 class LocalCoordinatesBase {
 private:
     Vector3 center = Vector3(0, 0, 0);
-    Vector3 rotationAxis = Vector3(0,0,0);
+    Vector3 rotationAxis = Vector3(0,1,0);
     float rotationAngle = 0;
 public:
 
