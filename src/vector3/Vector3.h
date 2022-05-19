@@ -11,7 +11,7 @@
 class Vector3 {
 
 private:
-    float x, y, z;
+    float x{}, y{}, z{};
 public:
     float getX() const;
 
@@ -28,6 +28,8 @@ public:
     float getLength() const;
 
     float getLengthSquared() const;
+
+    Vector3();
 
     Vector3(float x, float y, float z);
 
@@ -56,9 +58,11 @@ public:
 
     void normalize();
 
-    Vector3 getNormalized();
+    Vector3 getNormalized() const;
 
     static Vector3 bisectingVector(Vector3 vector1, Vector3 vector2);
+
+    static float calculateAngle(const Vector3 &vector1, const Vector3 &vector2);
 
     Vector3 rotateVector(Vector3 rotationVector, float number);
 

@@ -52,7 +52,7 @@ Vector3 Vector3::sum(float k) const {
     return Vector3(this->x + k, this->y + k, this->z + k);
 }
 
-Vector3 Vector3::sub(const Vector3 &obj)  const {
+Vector3 Vector3::sub(const Vector3 &obj) const {
     return Vector3(this->x - obj.x, this->y - obj.y, this->z - obj.z);
 }
 
@@ -79,7 +79,7 @@ Vector3 Vector3::multiplyVector(const Vector3 &vector3) const {
             this->x * vector3.y - this->y * vector3.x);
 }
 
-float Vector3::multiplyScalar( Vector3 vector3) const {
+float Vector3::multiplyScalar(Vector3 vector3) const {
     return (this->x * vector3.x + this->y * vector3.y + this->z * vector3.z);
 }
 
@@ -187,7 +187,7 @@ void Vector3::normalize() {
     this->z = result.z;
 }
 
-Vector3 Vector3::getNormalized(){
+Vector3 Vector3::getNormalized() const {
     float n = this->getLength();
     if (n == 0) {
         return this->multiply(n);
@@ -201,5 +201,11 @@ Vector3 Vector3::operator-(Vector3 obj) {
 }
 
 Vector3 Vector3::bisectingVector(Vector3 vector1, Vector3 vector2) {
-    return vector1*vector2.getLength()+vector2*vector1.getLength();
+    return vector1 * vector2.getLength() + vector2 * vector1.getLength();
+}
+
+Vector3::Vector3() : x(0), y(0), z(0) {}
+
+float Vector3::calculateAngle(const Vector3 &vector1, const Vector3 &vector2) {
+    return acos(vector1.multiplyScalar(vector2) / (vector1.getLength() * vector2.getLength()));
 }
