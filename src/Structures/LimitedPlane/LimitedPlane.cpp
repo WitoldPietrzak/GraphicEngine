@@ -2,6 +2,7 @@
 // Created by Witek on 28.03.2022.
 //
 
+#include <math.h>
 #include "LimitedPlane.h"
 #include "../../Intersection/Intersection.h"
 #include "../../Exceptions/InfiniteIntersectionException.h"
@@ -68,7 +69,9 @@ LimitedPlane::LimitedPlane(const Vector3 &pointLt, const Vector3 &pointRt,
 LimitedPlane::LimitedPlane(const Vector3 &startPoint, const Vector3 &widthVector, const Vector3 &heightVector)
         : Plane() {
     Vector3 normalVector = widthVector.getNormalized().multiplyVector(heightVector.getNormalized());
-    if (normalVector.getLength() <0.999 || normalVector.getLength() > 1.01) {
+    auto vectorsAngle = Vector3::calculateAngle(heightVector, widthVector);
+    float rightAngle = M_PI/2;
+    if (vectorsAngle !=  rightAngle) {
         throw InfiniteIntersectionException();
     }
     setNormalVector(normalVector);
