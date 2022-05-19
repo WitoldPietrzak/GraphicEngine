@@ -298,32 +298,43 @@ void task5(std::string name) {
     Structure *sphere = new Sphere(Vector3(-0.75,0.5,0.5),0.5,LightIntensity::RED());
     Structure *plane = new Plane(Vector3(0,0,1), Vector3(0,0,10));
     Structure *plane2 = new Plane(Vector3(0,-1,0), Vector3(0,0,0));
+    auto *limitedPlane = new LimitedPlane(Vector3(-3.7,1.5,0.5),Vector3(2.2,0,0),Vector3(0,-1.5,0));
+    limitedPlane->switchSide();
     plane->setColor(LightIntensity(255,255,255));
     plane2->setColor(LightIntensity(0,255,0));
 
     std::string textureFileName = "tex1.bmp";
+    std::string textureFileName2 = "tex2.bmp";
     auto mat = sphere->getMaterial();
     mat.setTexture(Image::load(textureFileName));
     mat.setMaterialType(MaterialType::diffuse_texture);
+
+    auto mat2 = limitedPlane->getMaterial();
+    mat2.setTexture(Image::load(textureFileName2));
+    mat2.setMaterialType(MaterialType::diffuse_texture);
+
     sphere->setMaterial(mat);
+    limitedPlane->setMaterial(mat2);
+    limitedPlane->setColor(LightIntensity::RED());
 
     auto *light = new PointLight(LightIntensity(255,255,255), Vector3(0.5,1.5,-2));
 
     PerspectiveCamera perspectiveCamera = PerspectiveCamera(Vector3(0, 0, -4), Vector3(0, 0, 1), Vector3(0, 1, 0),
                                                             4, 6, 6, PerspectiveSampler(4));
     PerspectiveCamera perspectiveCamera2 = PerspectiveCamera(Vector3(1, 1, -1), (Vector3(0, 0.5, 0)-Vector3(1, 1, -1)).getNormalized(), Vector3(0, 1, 0),
-                                                             4, 8, 8, PerspectiveSampler(4));
+                                                             4, 8, 8, PerspectiveSampler(2));
     Scene scene = Scene();
     scene.addStructure(sphere);
+    scene.addStructure(limitedPlane);
     scene.addStructure(plane);
     scene.addStructure(plane2);
-    scene.setBackgroundColor(LightIntensity::WHITE());
+    scene.setBackgroundColor(LightIntensity::BLUE());
     scene.setAmbient(LightIntensity(255,255,255));
     scene.addLightSource(light);
 //    auto test3 = perspectiveCamera.renderScene(scene,500,500);
     auto test4 = perspectiveCamera2.renderScene(scene,1024,1024);
 //    test3.save("perspective-custom.bmp");
-    test4.save("perspective-custom-angle-texture.bmp");
+    test4.save("perspective-custom-angle-texture-2.bmp");
 
 
 
@@ -331,7 +342,6 @@ void task5(std::string name) {
 
 
 int main() {
-
     task5("ostroslup.obj");
     return 0;
 }
