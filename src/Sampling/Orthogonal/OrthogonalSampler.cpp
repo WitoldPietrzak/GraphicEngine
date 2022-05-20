@@ -99,7 +99,8 @@ LightIntensity OrthogonalSampler::sampleRay(const Ray &ray, const Scene &scene) 
     diffuseLight = diffuseLight.multiply(nearestStructure->getMaterial().getDiffuse());
     specularLight = specularLight.multiply(nearestStructure->getMaterial().getSpecular());
 
-    return (ambientLight + diffuseLight + specularLight).multiply(nearestStructure->getColor());
+    return (ambientLight + diffuseLight + specularLight).multiply(
+            nearestStructure->getColor(nearestIntersection->getPoint()));
 }
 
 LightIntensity
