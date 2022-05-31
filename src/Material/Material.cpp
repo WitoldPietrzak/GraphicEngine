@@ -39,7 +39,8 @@ void Material::setSmoothness(float smoothness) {
 Material::Material(float ambient, float specular, float diffuse, float smoothness) : ambient(ambient),
                                                                                      specular(specular),
                                                                                      diffuse(diffuse),
-                                                                                     smoothness(smoothness) {}
+                                                                                     smoothness(smoothness),
+                                                                                     refractionIndex(1) {}
 
 float Material::getRefractionIndex() const {
     return refractionIndex;
@@ -71,4 +72,12 @@ const LightIntensity &Material::getColor() const {
 
 void Material::setColor(const LightIntensity &color) {
     Material::color = color;
+}
+
+Material::Material(float ambient, float specular, float diffuse, float smoothness, float refractionIndex): ambient(ambient),
+                                                                                                           specular(specular),
+                                                                                                           diffuse(diffuse),
+                                                                                                           smoothness(smoothness),
+                                                                                                           refractionIndex(refractionIndex) {
+
 }

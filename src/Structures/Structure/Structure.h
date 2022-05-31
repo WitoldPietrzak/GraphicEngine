@@ -17,7 +17,7 @@ class Intersection;
 
 class Structure {
 protected:
-    Material material = Material(0.3,0.5,0.5, 128);
+    Material material = Material(0.3,0.3,0.5, 32);
     LocalCoordinatesBase localCoordinatesBase = LocalCoordinatesBase();
 public:
     virtual std::vector<Intersection> intersections(Ray ray) const = 0;

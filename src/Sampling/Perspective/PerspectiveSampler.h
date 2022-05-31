@@ -11,11 +11,9 @@
 
 class PerspectiveSampler {
 private:
-    int maxDepth;
+    int maxDepth = 4;
+    int maxRayDepth = 4;
 
-
-    LightIntensity sampleDiffuse(const Scene &scene, const Intersection& intersection);
-    LightIntensity sampleSpecular(const Scene &scene, const Intersection& intersection, const Vector3 cameraPosition);
     LightIntensity sampleRefraction(const Scene &scene, const Intersection& intersection, const Vector3 origin);
     LightIntensity sampleMirror(const Scene &scene, const Intersection& intersection, const Vector3 origin);
     void sampleSpecularAndDiffuse(const Scene &scene, const Intersection& intersection, const Vector3& cameraPosition, LightIntensity &specular, LightIntensity &diffuse);
@@ -34,9 +32,15 @@ public:
 
     LightIntensity sampleRay(const Ray &ray, const Scene &scene);
 
+    LightIntensity sampleRay(const Ray &ray, const Scene &scene, int rayDepth, bool insideStructure);
+
     int getMaxDepth() const;
 
     void setMaxDepth(int maxDepth);
+
+    int getMaxRayDepth() const;
+
+    void setMaxRayDepth(int maxRayDepth);
 
 };
 

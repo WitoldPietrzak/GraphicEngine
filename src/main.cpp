@@ -292,7 +292,7 @@ Scene generatescene1(std::string name){
 
 }
 
-void task5(std::string name) {
+void task5() {
 
 
     Structure *sphere = new Sphere(Vector3(-0.75,0.5,0.5),0.5,LightIntensity::RED());
@@ -334,7 +334,86 @@ void task5(std::string name) {
 //    auto test3 = perspectiveCamera.renderScene(scene,500,500);
     auto test4 = perspectiveCamera2.renderScene(scene,1024,1024);
 //    test3.save("perspective-custom.bmp");
-    test4.save("perspective-custom-angle-texture-2.bmp");
+    test4.save("perspective-custom-angle-texture-5.bmp");
+
+
+
+}
+
+void task6() {
+
+
+    Structure *sphere2 = new Sphere(Vector3(-1.3,1.5,1.5),1.5,LightIntensity::RED());
+    Structure *sphere = new Sphere(Vector3(2,1.5,1),1.5,LightIntensity::RED());
+
+    sphere->setColor(LightIntensity::RED());
+    sphere2->setColor(LightIntensity::RED());
+
+    //Dół
+    auto *limitedPlane1 = new LimitedPlane(Vector3(-5,0,5),Vector3(10,0,0),Vector3(0,0,-10));
+
+    //Góra
+    auto *limitedPlane2_1 = new LimitedPlane(Vector3(-5,10,5),Vector3(10,0,0),Vector3(0,0,-4.5));
+    auto *limitedPlane2_2 = new LimitedPlane(Vector3(-5,10,-0.5),Vector3(10,0,0),Vector3(0,0,-4.5));
+    auto *limitedPlane2_3 = new LimitedPlane(Vector3(-5,10,0.5),Vector3(4.5,0,0),Vector3(0,0,-1));
+    auto *limitedPlane2_4 = new LimitedPlane(Vector3(0.5,10,0.5),Vector3(4.5,0,0),Vector3(0,0,-1));
+    limitedPlane1->switchSide();
+
+    //Lewo prawo
+    auto *limitedPlane3 = new LimitedPlane(Vector3(-5,0,5),Vector3(0,0,-10),Vector3(0,10,0));
+    auto *limitedPlane4 = new LimitedPlane(Vector3(5,0,5),Vector3(0,0,-10),Vector3(0,10,0));
+    limitedPlane3->switchSide();
+
+    // Przód tył
+    auto *limitedPlane5 = new LimitedPlane(Vector3(-5,0,5),Vector3(10,0,0),Vector3(0,10,0));
+    auto *limitedPlane6 = new LimitedPlane(Vector3(-5,0,-5),Vector3(10,0,0),Vector3(0,10,0));
+    limitedPlane6->switchSide();
+
+    limitedPlane1->setColor(LightIntensity(255,255,255));
+    limitedPlane2_1->setColor(LightIntensity(255,255,255));
+    limitedPlane2_2->setColor(LightIntensity(255,255,255));
+    limitedPlane2_3->setColor(LightIntensity(255,255,255));
+    limitedPlane2_4->setColor(LightIntensity(255,255,255));
+
+    limitedPlane3->setColor(LightIntensity::RED());
+    limitedPlane4->setColor(LightIntensity::BLUE());
+
+    limitedPlane5->setColor(LightIntensity::YELLOW());
+    limitedPlane6->setColor(LightIntensity::GREEN());
+
+    auto mat = sphere->getMaterial();
+    mat.setMaterialType(MaterialType::refraction);
+    mat.setRefractionIndex(1.83);
+
+    auto mat2 = sphere2->getMaterial();
+    mat2.setMaterialType(MaterialType::mirror);
+
+    sphere->setMaterial(mat);
+    sphere2->setMaterial(mat2);
+
+    auto *light = new PointLight(LightIntensity(2550,2550,2550), Vector3(0,10,0));
+    light->setLinAt(0.5);
+
+    PerspectiveCamera perspectiveCamera2 = PerspectiveCamera(Vector3(0, 5, -4.5), Vector3(0, 0, 1).getNormalized(), Vector3(0, 1, 0),
+                                                             1, 4, 4, PerspectiveSampler(2));
+    Scene scene = Scene();
+    scene.addStructure(sphere);
+    scene.addStructure(sphere2);
+    scene.addStructure(limitedPlane1);
+    scene.addStructure(limitedPlane2_1);
+    scene.addStructure(limitedPlane2_2);
+    scene.addStructure(limitedPlane2_3);
+    scene.addStructure(limitedPlane2_4);
+    scene.addStructure(limitedPlane3);
+    scene.addStructure(limitedPlane4);
+    scene.addStructure(limitedPlane5);
+    scene.addStructure(limitedPlane6);
+
+    scene.setBackgroundColor(LightIntensity::WHITE());
+    scene.setAmbient(LightIntensity(255,255,255));
+    scene.addLightSource(light);
+    auto test4 = perspectiveCamera2.renderScene(scene,1024,1024);
+    test4.save("task6-complete.bmp");
 
 
 
@@ -342,6 +421,6 @@ void task5(std::string name) {
 
 
 int main() {
-    task5("ostroslup.obj");
+    task6();
     return 0;
 }

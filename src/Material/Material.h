@@ -21,6 +21,7 @@ private:
 public:
 
     Material(float ambient, float specular, float diffuse, float smoothness);
+    Material(float ambient, float specular, float diffuse, float smoothness, float refractionIndex);
 
 
 
