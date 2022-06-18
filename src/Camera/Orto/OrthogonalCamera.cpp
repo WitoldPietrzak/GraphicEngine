@@ -8,7 +8,7 @@ OrthogonalCamera::OrthogonalCamera(const Vector3 &position, const Vector3 &targe
                                    float width, float height, OrthogonalSampler sampler) : Camera(position, targetVector, upVector), width(width),
                                                                 height(height), sampler(sampler) {}
 
-Image OrthogonalCamera::renderScene(const Scene &scene, int width, int height) {
+Image OrthogonalCamera::renderScene(Scene scene, int width, int height) {
 
     Image image = Image(width, height);
     auto pixelSizeX = this->getWidth() / image.getWidth();

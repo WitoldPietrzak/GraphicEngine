@@ -34,7 +34,7 @@ public:
 
     void setUpVector(const Vector3 &upVector);
 
-    virtual Image renderScene(const Scene& scene, int width, int height) = 0;
+    virtual Image renderScene( Scene scene, int width, int height) = 0;
 
 };
 

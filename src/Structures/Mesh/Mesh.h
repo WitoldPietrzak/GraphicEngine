@@ -40,6 +40,8 @@ public:
 
     void MapUV(const Vector3 &point, float &u, float &v) const override;
 
+    void move(Vector3 direction) override;
+
 
 };
 

@@ -34,15 +34,15 @@ void LightIntensity::setB(int b) {
 }
 
 void LightIntensity::add(int R, int G, int B) {
-    this->setR(this->getR() + R);
-    this->setG(this->getG() + G);
-    this->setB(this->getB() + B);
+    this->setR(this->r + R);
+    this->setG(this->g + G);
+    this->setB(this->b + B);
 }
 
-void LightIntensity::add(LightIntensity &li) {
-    this->setR(this->getR() + li.getR());
-    this->setG(this->getG() + li.getG());
-    this->setB(this->getB() + li.getB());
+void LightIntensity::add(LightIntensity li) {
+    this->setR(this->r + li.r);
+    this->setG(this->g + li.g);
+    this->setB(this->b + li.b);
 }
 
 LightIntensity LightIntensity::multiply(const float &num) const {
@@ -86,19 +86,19 @@ LightIntensity LightIntensity::YELLOW() {
 }
 
 LightIntensity LightIntensity::sum(LightIntensity &li) {
-    return {this->getR() + li.getR(), this->getG() + li.getG(), this->getB() + li.getB()};
+    return {this->r + li.r, this->g + li.g, this->b + li.b};
 }
 
 LightIntensity LightIntensity::sum(int num) {
-    return {this->getR() + num, this->getG() + num, this->getB() + num};
+    return {this->r + num, this->g + num, this->b + num};
 }
 
 LightIntensity LightIntensity::sub(LightIntensity &li) {
-    return {this->getR() - li.getR(), this->getG() - li.getG(), this->getB() - li.getB()};
+    return {this->r - li.r, this->g - li.g, this->b - li.b};
 }
 
 LightIntensity LightIntensity::sub(int num) {
-    return {this->getR() - num, this->getG() - num, this->getB() - num};
+    return {this->r - num, this->g - num, this->b - num};
 }
 
 LightIntensity LightIntensity::operator+(LightIntensity &li) {
@@ -117,7 +117,7 @@ LightIntensity LightIntensity::operator-(int num) {
     return sub(num);
 }
 
-void LightIntensity::operator+=(LightIntensity &li) {
+void LightIntensity::operator+=(LightIntensity li) {
     add(li);
 }
 

@@ -57,6 +57,8 @@ public:
     void removeLightSource(PointLight *light);
 
     void removeLightSource(SurfaceLight *light);
+
+    void increaseTime(float time);
 };
 
 

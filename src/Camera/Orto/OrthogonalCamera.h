@@ -19,7 +19,7 @@ public:
     OrthogonalCamera(const Vector3 &position, const Vector3 &targetVector, const Vector3 &upVector, float width,
                      float height, OrthogonalSampler sampler);
 
-    Image renderScene(const Scene &scene, int width, int height) override;
+    Image renderScene(Scene scene, int width, int height) override;
 
     float getWidth() const;
 

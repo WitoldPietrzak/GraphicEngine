@@ -29,6 +29,8 @@ public:
 
     void setConstAtt(float constAtt);
 
+    void move(Vector3 direction) override;
+
 
 };
 

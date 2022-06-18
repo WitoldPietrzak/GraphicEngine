@@ -258,44 +258,10 @@ void task3_teapot() {
 }
 
 
-Scene generatescene1(std::string name){
-
-    //Obiekty
-    ObjParser parser = ObjParser();
-    Structure *mesh = parser.parse(name);
-    Structure *sphere = new Sphere(Vector3(-0.75,0.5,0.5),0.2,LightIntensity::RED());
-    Structure *plane = new Plane(Vector3(0,0,1), Vector3(0,0,10));
-    Structure *plane2 = new Plane(Vector3(0,1,0), Vector3(0,-0.5,0));
-
-    //Swiatlo
-    auto *light = new PointLight(LightIntensity(255,255,255), Vector3(0.5,0.5,-10));
-    auto *light2 = new SurfaceLight(Vector3(0.5,1.5, -3), Vector3(3,0,0),Vector3(0,1,0),2);
-
-    //Ustawienia
-    plane->setColor(LightIntensity(255,255,255));
-    plane2->setColor(LightIntensity(0,255,0));
-    mesh->setColor(LightIntensity::BLUE());
-    //Scena
-
-    Scene scene = Scene();
-
-    scene.addStructure(mesh);
-    scene.addStructure(sphere);
-    scene.addStructure(plane);
-    scene.addStructure(plane2);
-    scene.setBackgroundColor(LightIntensity::WHITE());
-    scene.setAmbient(LightIntensity(255,255,255));
-    scene.addLightSource(light);
-    scene.addLightSource(light2);
-
-    return scene;
-
-}
-
 void task5() {
 
 
-    Structure *sphere = new Sphere(Vector3(-0.75,0.5,0.5),0.5,LightIntensity::RED());
+    Structure *sphere = new Sphere(Vector3(-0.75,0.2,0.3),0.2,LightIntensity::RED());
     Structure *plane = new Plane(Vector3(0,0,1), Vector3(0,0,10));
     Structure *plane2 = new Plane(Vector3(0,-1,0), Vector3(0,0,0));
     auto *limitedPlane = new LimitedPlane(Vector3(-3.7,1.5,0.5),Vector3(2.2,0,0),Vector3(0,-1.5,0));
@@ -388,14 +354,15 @@ void task6() {
     auto mat2 = sphere2->getMaterial();
     mat2.setMaterialType(MaterialType::mirror);
 
-    sphere->setMaterial(mat);
-    sphere2->setMaterial(mat2);
+//    sphere->setMaterial(mat);
+//    sphere2->setMaterial(mat2);
 
-    auto *light = new PointLight(LightIntensity(2550,2550,2550), Vector3(0,10,0));
-    light->setLinAt(0.5);
+//    auto *light = new PointLight(LightIntensity(2550,2550,2550), Vector3(0,10,0));
+    auto *softLight = new SurfaceLight(Vector3(-0.5,10.1,-0.5),Vector3(1,0,0),Vector3(0,0,1),4,LightIntensity(155,155,155));
+//    light->setLinAt(0.5);
 
     PerspectiveCamera perspectiveCamera2 = PerspectiveCamera(Vector3(0, 5, -4.5), Vector3(0, 0, 1).getNormalized(), Vector3(0, 1, 0),
-                                                             1, 4, 4, PerspectiveSampler(2));
+                                                             1, 4, 4, PerspectiveSampler(1));
     Scene scene = Scene();
     scene.addStructure(sphere);
     scene.addStructure(sphere2);
@@ -411,9 +378,144 @@ void task6() {
 
     scene.setBackgroundColor(LightIntensity::WHITE());
     scene.setAmbient(LightIntensity(255,255,255));
-    scene.addLightSource(light);
+    scene.addLightSource(softLight);
     auto test4 = perspectiveCamera2.renderScene(scene,1024,1024);
-    test4.save("task6-complete.bmp");
+    test4.save("task6-complete-soft.bmp");
+
+
+
+}
+
+void distributedRTSoftShadows() {
+
+
+    Structure *sphere = new Sphere(Vector3(0,1,0),1,LightIntensity::RED());
+
+    sphere->setColor(LightIntensity::RED());
+
+    //Dół
+//    auto *limitedPlane1 = new LimitedPlane(Vector3(-5,0,5),Vector3(10,0,0),Vector3(0,0,-10));
+    auto *limitedPlane1 = new Plane(Vector3(0,1,0),Vector3(0,0,0));
+    limitedPlane1->switchSide();
+
+
+    limitedPlane1->setColor(LightIntensity(255,255,255));
+
+    auto mat = sphere->getMaterial();
+    mat.setMaterialType(MaterialType::refraction);
+    mat.setRefractionIndex(1.83);
+//    sphere->setMaterial(mat);
+
+    auto *light = new PointLight(LightIntensity(2550,2550,2550), Vector3(0,6,2));
+    auto *softLight = new SurfaceLight(Vector3(-0.5,5.5,2),Vector3(1,0,0),Vector3(0,1,0),10,LightIntensity(2550/100,2550/100,2550/100));
+//    light->setLinAt(0.5);
+
+    PerspectiveCamera perspectiveCamera = PerspectiveCamera(Vector3(0, 5, -6), Vector3(0, 0, 1).getNormalized(), Vector3(0, 1, 0),
+                                                             1, 4, 4, PerspectiveSampler(1));
+    Scene scene = Scene();
+    scene.addStructure(sphere);
+    scene.addStructure(limitedPlane1);
+
+    scene.setBackgroundColor(LightIntensity::BLACK());
+    scene.setAmbient(LightIntensity(255,255,255));
+    scene.addLightSource(softLight);
+    auto test4 = perspectiveCamera.renderScene(scene,512,512);
+    test4.save("distributed-soft.bmp");
+
+
+
+}
+
+void distributedRTDepthOfField() {
+
+
+    Structure *sphere = new Sphere(Vector3(0,0.6,-2.2),0.6,LightIntensity::RED());
+    Structure *sphere2 = new Sphere(Vector3(7,1.5,4),1.5,LightIntensity::BLUE());
+    Structure *sphere3 = new Sphere(Vector3(15,1.5,7),1.5,LightIntensity::YELLOW());
+
+    sphere->setColor(LightIntensity::RED());
+
+
+    auto *limitedPlane1 = new Plane(Vector3(0,1,0),Vector3(0,0,0));
+    limitedPlane1->switchSide();
+
+    auto *limitedPlane2 =  new LimitedPlane(Vector3(-90,0,30),Vector3(180,0,0),Vector3(0,90,0));
+
+
+    limitedPlane1->setColor(LightIntensity(255,255,255));
+
+    std::string textureFileName = "background.bmp";
+    auto mat = limitedPlane2->getMaterial();
+    mat.setTexture(Image::load(textureFileName));
+    mat.setMaterialType(MaterialType::diffuse_texture);
+    limitedPlane2->setMaterial(mat);
+
+    auto *light = new PointLight(LightIntensity(2550,2550,2550), Vector3(-1.5,2,-3));
+
+    PerspectiveCamera perspectiveCamera = PerspectiveCamera(Vector3(0, 1, -3), Vector3(0, 0, 1).getNormalized(), Vector3(0, 1, 0),
+                                                            10, 40, 40, PerspectiveSampler(1));
+    perspectiveCamera.setLensRadius(0.04);
+    Scene scene = Scene();
+    scene.addStructure(sphere);
+    scene.addStructure(sphere2);
+    scene.addStructure(sphere3);
+    scene.addStructure(limitedPlane1);
+    scene.addStructure(limitedPlane2);
+
+    scene.setBackgroundColor(LightIntensity::BLACK());
+    scene.setAmbient(LightIntensity(255,255,255));
+    scene.addLightSource(light);
+    auto test4 = perspectiveCamera.renderScene(scene,512,512);
+    test4.save("depth-far.bmp");
+
+
+
+}
+
+void distributedRTMovement() {
+
+
+    Structure *sphere = new Sphere(Vector3(-1,1.5,0),1.5,LightIntensity::RED());
+    Structure *sphere2 = new Sphere(Vector3(7,6,4),1.5,LightIntensity::BLUE());
+    Structure *sphere3 = new Sphere(Vector3(15,1.5,7),1.5,LightIntensity::YELLOW());
+
+    sphere->setMovemment(Vector3(1,0,0));
+    sphere2->setMovemment(Vector3(0,-4.5,0));
+
+
+    sphere->setColor(LightIntensity::RED());
+
+
+    auto *limitedPlane1 = new Plane(Vector3(0,1,0),Vector3(0,0,0));
+    limitedPlane1->switchSide();
+
+    auto *limitedPlane2 =  new LimitedPlane(Vector3(-90,0,30),Vector3(180,0,0),Vector3(0,90,0));
+
+
+    limitedPlane1->setColor(LightIntensity(255,255,255));
+
+    std::string textureFileName = "background.bmp";
+    auto mat = limitedPlane2->getMaterial();
+    mat.setTexture(Image::load(textureFileName));
+    mat.setMaterialType(MaterialType::diffuse_texture);
+    limitedPlane2->setMaterial(mat);
+
+    auto *light = new PointLight(LightIntensity(255,255,255), Vector3(-1.5,2,-3));
+
+    PerspectiveCamera perspectiveCamera = PerspectiveCamera(Vector3(0, 1, -3), Vector3(0, 0, 1).getNormalized(), Vector3(0, 1, 0),
+                                                            10, 40, 40, PerspectiveSampler(1));
+    Scene scene = Scene();
+    scene.addStructure(sphere);
+    scene.addStructure(sphere2);
+    scene.addStructure(sphere3);
+    scene.addStructure(limitedPlane1);
+    scene.addStructure(limitedPlane2);
+
+    scene.setBackgroundColor(LightIntensity::BLACK());
+    scene.setAmbient(LightIntensity(255,255,255));
+    scene.addLightSource(light);
+    auto test4 = perspectiveCamera.renderScene(scene,512,512);
+    test4.save("movement-8-samples.bmp");
 
 
 
@@ -421,6 +523,6 @@ void task6() {
 
 
 int main() {
-    task6();
+    distributedRTMovement();
     return 0;
 }

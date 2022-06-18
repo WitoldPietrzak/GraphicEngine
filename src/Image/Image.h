@@ -8,6 +8,7 @@
 
 #include "../LightIntensity/LightIntensity.h"
 #include <string>
+#include <vector>
 
 class Image {
 private:
@@ -37,6 +38,13 @@ public:
     void save(const std::string& filename);
 
     static Image load(std::string& filename);
+
+    void div(float number);
+    void multiply(float number);
+    void add(float number);
+    void sub(float number);
+    void add(const LightIntensity &li);
+    void sub(const LightIntensity &li);
 
 };
 

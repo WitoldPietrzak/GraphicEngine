@@ -15,7 +15,7 @@ std::vector<Intersection> Triangle::intersections(Ray ray) const {
         return planeIntersections;
     }
     auto triangleIntersections = std::vector<Intersection>();
-    for (auto &intersection : planeIntersections) {
+    for (auto &intersection: planeIntersections) {
         auto fa = a - intersection.getPoint();
         auto fb = b - intersection.getPoint();
         auto fc = c - intersection.getPoint();
@@ -80,5 +80,13 @@ Vector3 Triangle::getNormalVector(Vector3 point) const {
 
 void Triangle::MapUV(const Vector3 &point, float &u, float &v) const {
     return;
+
+}
+
+void Triangle::move(Vector3 direction) {
+    plane.move(direction);
+    a += direction;
+    b += direction;
+    c += direction;
 
 }

@@ -15,3 +15,11 @@ void Light::setLightIntensity(const LightIntensity &lightIntensity) {
 Light::Light(const LightIntensity &lightIntensity) : lightIntensity(lightIntensity) {}
 
 Light::Light() {}
+
+const Vector3 &Light::getMovemment() const {
+    return movemment;
+}
+
+void Light::setMovemment(const Vector3 &movemment) {
+    Light::movemment = movemment;
+}

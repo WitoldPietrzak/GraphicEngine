@@ -84,3 +84,13 @@ LightIntensity Image::getPixel(float u, float v) {
     int y = std::round((height - 1) * v);
     return getPixel(x, y);
 }
+
+void Image::div(float number){
+    for (int i = 0; i < this->getHeight(); i++) {
+        for (int j = 0; j < this->getWidth(); j++) {
+            auto pixel = this->getPixel(j, i);
+            pixel = pixel.div(number);
+            this->setPixel(j,i,pixel);
+        }
+}
+}

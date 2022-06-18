@@ -31,16 +31,18 @@ PerspectiveSampler::doSampling(const Scene &scene, const Vector3 &center, Vector
     auto vectorBR = (target + (vectorX * pixelWidthX / 2.0f) - (vectorY * pixelWidthY / 2.0f)) - center;
 
     Ray middle = Ray(center, vectorMD.getNormalized());
-    Ray topLeft = Ray(center, vectorTL.getNormalized());
-    Ray topRight = Ray(center, vectorTR.getNormalized());
-    Ray bottomLeft = Ray(center, vectorBL.getNormalized());
-    Ray bottomRight = Ray(center, vectorBR.getNormalized());
 
     auto colorMD = sampleRay(middle, scene);
 
     if (maxDepth <= 0) {
         return colorMD;
     }
+
+    Ray topLeft = Ray(center, vectorTL.getNormalized());
+    Ray topRight = Ray(center, vectorTR.getNormalized());
+    Ray bottomLeft = Ray(center, vectorBL.getNormalized());
+    Ray bottomRight = Ray(center, vectorBR.getNormalized());
+
     auto colorTL = sampleRay(topLeft, scene);
     auto colorTR = sampleRay(topRight, scene);
     auto colorBL = sampleRay(bottomLeft, scene);

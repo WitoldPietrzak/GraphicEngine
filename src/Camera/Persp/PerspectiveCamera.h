@@ -11,15 +11,20 @@
 
 class PerspectiveCamera: public Camera {
 private:
-    float distance;
-    float fovX;
-    float fovY;
+    float distance, fovX, fovY;
+    float lensRadius = 0;
     PerspectiveSampler sampler;
+    int depthSampleCount = 5;
+    int timeSampleCount = 8;
+
+    Vector3 calculatePointOnLens(const Vector3 &vectorX, const Vector3 &vectorY);
+
+    std::vector<float> generateTimeMoments(int amount);
 public:
     PerspectiveCamera(const Vector3 &position, const Vector3 &targetVector, const Vector3 &upVector, float distance,
                       float fovX, float fovY, const PerspectiveSampler &sampler);
 
-    Image renderScene(const Scene &scene, int width, int height) override;
+    Image renderScene(Scene scene, int width, int height) override;
 
     float getDistance() const;
 
@@ -36,6 +41,21 @@ public:
     const PerspectiveSampler &getSampler() const;
 
     void setSampler(const PerspectiveSampler &sampler);
+
+    float getLensRadius() const;
+
+    void setLensRadius(float lensRadius);
+
+
+    int getDepthSampleCount() const;
+
+    void setDepthSampleCount(int depthSampleCount);
+
+    int getTimeSampleCount() const;
+
+    void setTimeSampleCount(int timeSampleCount);
+
+
 };
 
 

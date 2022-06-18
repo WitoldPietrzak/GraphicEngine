@@ -47,19 +47,19 @@ Mesh::Mesh(std::vector<Triangle *> triangles) : triangles(std::move(triangles)) 
 
 Mesh::Mesh(const LightIntensity &color) : Structure(color) {}
 
-Mesh::Mesh():triangles(std::vector<Triangle *>()) {}
+Mesh::Mesh() : triangles(std::vector<Triangle *>()) {}
 
 Vector3 Mesh::getNormalVector(Vector3 point) const {
-    for(auto &triangle: triangles){
-        return Vector3(0,0,0);
+    for (auto &triangle: triangles) {
+        return Vector3(0, 0, 0);
         //TODO
     }
-    return Vector3(0,0,0);
+    return Vector3(0, 0, 0);
 }
 
 void Mesh::setColor(const LightIntensity &color) {
     Structure::setColor(color);
-    for(auto &triangle: triangles){
+    for (auto &triangle: triangles) {
         triangle->setColor(color);
     }
 
@@ -68,7 +68,7 @@ void Mesh::setColor(const LightIntensity &color) {
 
 void Mesh::setMaterial(const Material &material) {
     Structure::setMaterial(material);
-    for(auto &triangle: triangles){
+    for (auto &triangle: triangles) {
         triangle->setMaterial(material);
     }
 }
@@ -76,4 +76,10 @@ void Mesh::setMaterial(const Material &material) {
 void Mesh::MapUV(const Vector3 &point, float &u, float &v) const {
     return;
 
+}
+
+void Mesh::move(Vector3 direction) {
+    for (auto &triangle: triangles) {
+        triangle->move(direction);
+    }
 }

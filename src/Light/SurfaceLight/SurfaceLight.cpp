@@ -12,13 +12,11 @@ std::vector<PointLight *>
 SurfaceLight::generateSurfaceLight(Vector3 point, const Vector3& v1, const Vector3& v2, int density, LightIntensity color) {
     std::vector<PointLight *> lights;
     auto start = point;
-    auto endX = point + v1;
-    auto endY = point + v2;
     auto distanceX = v1.getLength();
     auto distanceY = v2.getLength();
 
     if (density == 1) {
-        auto middleLight = new PointLight(color, start + (endX / 2) + (endY / 2));
+        auto middleLight = new PointLight(color, start + (v1 / 2) + (v2 / 2));
         lights.push_back(middleLight);
         return lights;
     } else {
@@ -26,7 +24,7 @@ SurfaceLight::generateSurfaceLight(Vector3 point, const Vector3& v1, const Vecto
         auto singleMoveDistanceY = distanceY / (density - 1);
         for (int y = 0; y < density; y++) {
             for (int x = 0; x < density; x++) {
-                lights.push_back(new PointLight(color, start + endX.multiply(x * singleMoveDistanceX) + endY.multiply(y * singleMoveDistanceY)));
+                lights.push_back(new PointLight(color, start + v1.multiply(x * singleMoveDistanceX) + v2.multiply(y * singleMoveDistanceY)));
             }
         }
     }
@@ -63,3 +61,12 @@ void SurfaceLight::setConstAtt(float constAtt) {
     }
 
 }
+
+void SurfaceLight::move(Vector3 direction) {
+    for(auto &light: pointLights){
+        light->move(direction);
+    }
+
+}
+
+

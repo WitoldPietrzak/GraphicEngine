@@ -96,3 +96,10 @@ void Plane::switchSide() {
     normalVector = -normalVector;
 
 }
+
+void Plane::move(Vector3 direction) {
+    Vector3 point = normalVector*distance;
+    point += direction;
+    distance = calculateDistance(normalVector,point);
+
+}

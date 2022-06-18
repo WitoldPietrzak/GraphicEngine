@@ -34,6 +34,8 @@ public:
     void setConstAtt(float constAtt);
 
     LightIntensity getLightIntensity(Vector3 point);
+
+    void move(Vector3 direction) override;
 };
 
 

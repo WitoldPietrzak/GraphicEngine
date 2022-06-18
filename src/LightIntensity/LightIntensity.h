@@ -31,7 +31,8 @@ public:
 
     void add(int R, int G, int B);
 
-    void add(LightIntensity &li);
+
+    void add(LightIntensity li);
 
     LightIntensity sum(LightIntensity &li);
 
@@ -78,7 +79,7 @@ public:
     LightIntensity operator*(LightIntensity &li);
     LightIntensity operator*(const LightIntensity &li);
 
-    void operator+=(LightIntensity &li);
+    void operator+=(LightIntensity li);
 
     LightIntensity operator-=(LightIntensity &li);
 

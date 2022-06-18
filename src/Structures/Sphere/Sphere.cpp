@@ -84,3 +84,8 @@ void Sphere::MapUV(const Vector3 &point, float &u, float &v) const {
     u = 0.5f + atan2f(pointToCenterVector.getX(), pointToCenterVector.getZ()) / (2 * M_PI);
     v = 0.5f + std::asin(pointToCenterVector.getY()) / (M_PI);
 }
+
+void Sphere::move(Vector3 direction) {
+    this->center += direction;
+
+}

@@ -3,8 +3,11 @@
 //
 
 #include "PerspectiveCamera.h"
+#include <cmath>
+#include <random>
+#include <bits/stdc++.h>
 
-Image PerspectiveCamera::renderScene(const Scene &scene, int width, int height) {
+Image PerspectiveCamera::renderScene(Scene scene, int width, int height) {
 
     auto vectorX = -this->targetVector.multiplyVector(this->getUpVector()).getNormalized();
     auto vectorY = this->upVector;
@@ -15,15 +18,42 @@ Image PerspectiveCamera::renderScene(const Scene &scene, int width, int height) 
 
     auto pixelSizeX = this->getFovX() / image.getWidth();
     auto pixelSizeY = this->getFovY() / image.getHeight();
-    for (int i = 0; i < image.getHeight(); i++) {
-        for (int j = 0; j < image.getWidth(); j++) {
-            auto rayTarget = imageTopLeft+(vectorX*pixelSizeX*j)-(vectorY*pixelSizeY*i)+(vectorX*pixelSizeX/2.0f)-(vectorY*pixelSizeY/2.0f);
-            auto color = sampler.doSampling(scene, this->position, rayTarget, vectorX, vectorY, pixelSizeX, pixelSizeY);
-            image.setPixel(j, i, color);
 
 
+    auto timeMoments = generateTimeMoments(timeSampleCount);
+    for (int l = 0; l < std::max(timeSampleCount, 1); l++) {
+
+        if (!timeMoments.empty()) {
+            if (l == 0) {
+                scene.increaseTime(timeMoments[l]);
+            } else {
+                scene.increaseTime(timeMoments[l] - timeMoments[l - 1]);
+            }
+        }
+        for (int i = 0; i < image.getHeight(); i++) {
+            for (int j = 0; j < image.getWidth(); j++) {
+                Vector3 rayTargetPosition = imageTopLeft + (vectorX * pixelSizeX * j) - (vectorY * pixelSizeY * i) +
+                                            (vectorX * pixelSizeX / 2.0f) - (vectorY * pixelSizeY / 2.0f);
+
+                LightIntensity color = LightIntensity(0, 0, 0);
+                if (lensRadius <= 0) {
+                    color = sampler.doSampling(scene, this->position, rayTargetPosition, vectorX, vectorY,
+                                               pixelSizeX, pixelSizeY);
+                } else {
+                    for (int k = 0; k < depthSampleCount; k++) {
+                        Vector3 startPoint = calculatePointOnLens(vectorX, vectorY);
+                        color.add(sampler.doSampling(scene, startPoint, rayTargetPosition, vectorX, vectorY, pixelSizeX,
+                                                     pixelSizeY));
+                    }
+                }
+                color = color.div((lensRadius > 0 ? (float)depthSampleCount : 1.0f));
+                l == 0 ? image.setPixel(j, i, color) : image.setPixel(j, i, image.getPixel(j, i).sum(color));
+
+
+            }
         }
     }
+    image.div(std::max((float)timeSampleCount, 1.0f));
     return image;
 }
 
@@ -62,3 +92,45 @@ void PerspectiveCamera::setSampler(const PerspectiveSampler &sampler) {
 PerspectiveCamera::PerspectiveCamera(const Vector3 &position, const Vector3 &targetVector, const Vector3 &upVector,
                                      float distance, float fovX, float fovY, const PerspectiveSampler &sampler)
         : Camera(position, targetVector, upVector), distance(distance), fovX(fovX), fovY(fovY), sampler(sampler) {}
+
+float PerspectiveCamera::getLensRadius() const {
+    return lensRadius;
+}
+
+void PerspectiveCamera::setLensRadius(float lensRadius) {
+    PerspectiveCamera::lensRadius = lensRadius;
+}
+
+Vector3 PerspectiveCamera::calculatePointOnLens(const Vector3 &vectorX, const Vector3 &vectorY) {
+    auto randomRadius = lensRadius * sqrtf(((float) rand() / (RAND_MAX)));
+    float randomAngle = ((float) rand() / (RAND_MAX)) * M_PI * 2;
+    auto xOffset = randomRadius * cosf(randomAngle);
+    auto yOffset = randomRadius * sinf(randomAngle);
+    return this->position + (vectorX * xOffset) + (vectorY * yOffset);
+
+}
+
+std::vector<float> PerspectiveCamera::generateTimeMoments(int amount) {
+    std::vector<float> timeMoments = std::vector<float>();
+    for (int i = 0; i < amount; i++) {
+        timeMoments.push_back(sqrtf(((float) rand() / (RAND_MAX))));
+    }
+    std::sort(timeMoments.begin(), timeMoments.end(), std::less<>());
+    return timeMoments;
+}
+
+int PerspectiveCamera::getDepthSampleCount() const {
+    return depthSampleCount;
+}
+
+void PerspectiveCamera::setDepthSampleCount(int depthSampleCount) {
+    PerspectiveCamera::depthSampleCount = depthSampleCount;
+}
+
+int PerspectiveCamera::getTimeSampleCount() const {
+    return timeSampleCount;
+}
+
+void PerspectiveCamera::setTimeSampleCount(int timeSampleCount) {
+    PerspectiveCamera::timeSampleCount = timeSampleCount;
+}

@@ -92,3 +92,13 @@ void Scene::removeLightSource(SurfaceLight *light) {
         removeLightSource(pointLight);
     }
 }
+
+void Scene::increaseTime(float time) {
+    for(auto &structure: structures){
+        structure->move(structure->getMovemment()*time);
+    }
+    for(auto &light: lightSources){
+        light->move(light->getMovemment()*time);
+    }
+
+}

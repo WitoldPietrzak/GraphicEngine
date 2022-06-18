@@ -49,6 +49,8 @@ public:
 
     void switchSide();
 
+    void move(Vector3 direction) override;
+
 
 };
 

@@ -19,6 +19,8 @@ class Structure {
 protected:
     Material material = Material(0.3,0.3,0.5, 32);
     LocalCoordinatesBase localCoordinatesBase = LocalCoordinatesBase();
+    bool transparent = false;
+    Vector3 movemment = Vector3(0,0,0);
 public:
     virtual std::vector<Intersection> intersections(Ray ray) const = 0;
 
@@ -44,9 +46,14 @@ public:
 
     virtual Vector3 getNormalVector(Vector3 point) const = 0;
 
+    const Vector3 &getMovemment() const;
+
+    void setMovemment(const Vector3 &movemment);
 
 
     virtual void MapUV(const Vector3 &point, float &u, float &v) const = 0;
+
+    virtual void move(Vector3 direction)  = 0;
 
 
 };

@@ -49,3 +49,11 @@ LightIntensity Structure::getColor(const Vector3 &intersectionPoint) {
     return material.getColor();
     return LightIntensity();
 }
+
+const Vector3 &Structure::getMovemment() const {
+    return movemment;
+}
+
+void Structure::setMovemment(const Vector3 &movemment) {
+    Structure::movemment = movemment;
+}

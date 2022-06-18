@@ -70,8 +70,8 @@ LimitedPlane::LimitedPlane(const Vector3 &startPoint, const Vector3 &widthVector
         : Plane() {
     Vector3 normalVector = widthVector.getNormalized().multiplyVector(heightVector.getNormalized());
     auto vectorsAngle = Vector3::calculateAngle(heightVector, widthVector);
-    float rightAngle = M_PI/2;
-    if (vectorsAngle !=  rightAngle) {
+    float rightAngle = M_PI / 2;
+    if (vectorsAngle != rightAngle) {
         throw InfiniteIntersectionException();
     }
     setNormalVector(normalVector);
@@ -82,7 +82,7 @@ LimitedPlane::LimitedPlane(const Vector3 &startPoint, const Vector3 &widthVector
     pointRB = startPoint + widthVector + heightVector;
 
     localCoordinatesBase.setCenter(startPoint);
-    localCoordinatesBase.setRotationAxis(normalVector.getNormalized().multiplyVector(Vector3(0,0,1)).getNormalized());
+    localCoordinatesBase.setRotationAxis(normalVector.getNormalized().multiplyVector(Vector3(0, 0, 1)).getNormalized());
     localCoordinatesBase.setRotationAngle(Vector3::calculateAngle(Vector3(0, 0, 1), normalVector.getNormalized()));
 
 }
@@ -99,4 +99,13 @@ void LimitedPlane::MapUV(const Vector3 &point, float &u, float &v) const {
     auto localPoint = localCoordinatesBase.fromBaseCoordinates(point);
     u = std::abs(localPoint.getX() / getWidth());
     v = std::abs(localPoint.getY() / getHeight());
+}
+
+void LimitedPlane::move(Vector3 direction) {
+    Plane::move(direction);
+    pointLT += direction;
+    pointRT += direction;
+    pointLB += direction;
+    pointRB += direction;
+
 }

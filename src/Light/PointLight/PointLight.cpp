@@ -38,3 +38,8 @@ void PointLight::setConstAtt(float constAtt) {
 LightIntensity PointLight::getLightIntensity(Vector3 point) {
     return lightIntensity.div((constAtt + (linAt * (position - point).getLength())));
 }
+
+void PointLight::move(Vector3 direction) {
+    position+=direction;
+
+}
