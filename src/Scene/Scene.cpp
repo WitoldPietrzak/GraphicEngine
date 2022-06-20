@@ -66,6 +66,23 @@ const std::vector<PointLight *> &Scene::getLightSources() const {
     return lightSources;
 }
 
+void Scene::getLightSources(int lightSampleCount, std::vector<PointLight*> &lightSourcesCopy) const {
+
+    for(auto &lightSource: lightSources){
+        lightSourcesCopy.push_back(lightSource);
+    }
+
+    for (auto &lightSource: distributedLightSources) {
+        for (int i = 0; i < lightSampleCount; i++) {
+            auto* pointLight = new PointLight(lightSource->getLightIntensity().div(lightSampleCount),lightSource->getRandomPointOnSurface());
+            pointLight->setConstAtt(lightSource->getConstAtt());
+            pointLight->setLinAt(lightSource->getLinAt());
+            lightSourcesCopy.push_back(pointLight);
+
+        }
+    }
+}
+
 void Scene::setLightSources(const std::vector<PointLight *> &lightSources) {
     Scene::lightSources = lightSources;
 }
@@ -93,12 +110,22 @@ void Scene::removeLightSource(SurfaceLight *light) {
     }
 }
 
+
 void Scene::increaseTime(float time) {
-    for(auto &structure: structures){
-        structure->move(structure->getMovemment()*time);
+    for (auto &structure: structures) {
+        structure->move(structure->getMovemment() * time);
     }
-    for(auto &light: lightSources){
-        light->move(light->getMovemment()*time);
+    for (auto &light: lightSources) {
+        light->move(light->getMovemment() * time);
     }
 
 }
+
+void Scene::addLightSource(DistributedLight *light) {
+    this->distributedLightSources.push_back(light);
+}
+
+void Scene::removeLightSource(DistributedLight *light) {
+    std::remove(this->distributedLightSources.begin(), this->distributedLightSources.end(), light);
+}
+

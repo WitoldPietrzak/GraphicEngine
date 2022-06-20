@@ -24,61 +24,83 @@ PerspectiveSampler::doSampling(const Scene &scene, const Vector3 &center, Vector
                                float pixelWidthY) {
 
 
-    auto vectorMD = target - center;
-    auto vectorTL = (target - (vectorX * pixelWidthX / 2.0f) + (vectorY * pixelWidthY / 2.0f)) - center;
-    auto vectorTR = (target + (vectorX * pixelWidthX / 2.0f) + (vectorY * pixelWidthY / 2.0f)) - center;
-    auto vectorBL = (target - (vectorX * pixelWidthX / 2.0f) - (vectorY * pixelWidthY / 2.0f)) - center;
-    auto vectorBR = (target + (vectorX * pixelWidthX / 2.0f) - (vectorY * pixelWidthY / 2.0f)) - center;
+    switch (samplingType) {
+        case SamplingType::AdaptiveSupersampling: {
+            auto vectorMD = target - center;
+            auto vectorTL = (target - (vectorX * pixelWidthX / 2.0f) + (vectorY * pixelWidthY / 2.0f)) - center;
+            auto vectorTR = (target + (vectorX * pixelWidthX / 2.0f) + (vectorY * pixelWidthY / 2.0f)) - center;
+            auto vectorBL = (target - (vectorX * pixelWidthX / 2.0f) - (vectorY * pixelWidthY / 2.0f)) - center;
+            auto vectorBR = (target + (vectorX * pixelWidthX / 2.0f) - (vectorY * pixelWidthY / 2.0f)) - center;
 
-    Ray middle = Ray(center, vectorMD.getNormalized());
+            Ray middle = Ray(center, vectorMD.getNormalized());
 
-    auto colorMD = sampleRay(middle, scene);
+            auto colorMD = sampleRay(middle, scene);
 
-    if (maxDepth <= 0) {
-        return colorMD;
+            if (maxDepth <= 0) {
+                return colorMD;
+            }
+
+            Ray topLeft = Ray(center, vectorTL.getNormalized());
+            Ray topRight = Ray(center, vectorTR.getNormalized());
+            Ray bottomLeft = Ray(center, vectorBL.getNormalized());
+            Ray bottomRight = Ray(center, vectorBR.getNormalized());
+
+            auto colorTL = sampleRay(topLeft, scene);
+            auto colorTR = sampleRay(topRight, scene);
+            auto colorBL = sampleRay(bottomLeft, scene);
+            auto colorBR = sampleRay(bottomRight, scene);
+
+            if (maxDepth > 1) {
+                if (colorTL != colorMD) {
+                    colorTL = doSampling(scene, center, (target + vectorTL / 2.0f), vectorX, vectorY, pixelWidthX / 2,
+                                         pixelWidthY / 2, 1, 0, colorMD, colorTL);
+                }
+                if (colorTR != colorMD) {
+                    colorTR = doSampling(scene, center, (target + vectorTR / 2.0f), vectorX, vectorY, pixelWidthX / 2,
+                                         pixelWidthY / 2, 1, 1, colorMD, colorTR);
+                }
+                if (colorBL != colorMD) {
+                    colorBL = doSampling(scene, center, (target + vectorBL / 2.0f), vectorX, vectorY, pixelWidthX / 2,
+                                         pixelWidthY / 2, 1, 2, colorMD, colorBL);
+                }
+                if (colorBR != colorMD) {
+                    colorBR = doSampling(scene, center, (target + vectorBR / 2.0f), vectorX, vectorY, pixelWidthX / 2,
+                                         pixelWidthY / 2, 1, 3, colorMD, colorBR);
+                }
+            }
+            int R = ((colorMD.getR() + colorTL.getR()) / 2
+                     + (colorMD.getR() + colorTR.getR()) / 2
+                     + (colorMD.getR() + colorBL.getR()) / 2
+                     + (colorMD.getR() + colorBR.getR()) / 2) / 4;
+            int G = ((colorMD.getG() + colorTL.getG()) / 2
+                     + (colorMD.getG() + colorTR.getG()) / 2
+                     + (colorMD.getG() + colorBL.getG()) / 2
+                     + (colorMD.getG() + colorBR.getG()) / 2) / 4;
+            int B = ((colorMD.getB() + colorTL.getB()) / 2
+                     + (colorMD.getB() + colorTR.getB()) / 2
+                     + (colorMD.getB() + colorBL.getB()) / 2
+                     + (colorMD.getB() + colorBR.getB()) / 2) / 4;
+            return {R, G, B};
+        }
+        case SamplingType::DistributedSampling: {
+            auto colorMD = LightIntensity(0,0,0);
+            for (int i = 0; i < pixelSampleCount; i++) {
+                auto vectorTL = (target - (vectorX * pixelWidthX / 2.0f) + (vectorY * pixelWidthY / 2.0f));
+                Vector3 xOffset  = vectorX* ((float) rand()/(RAND_MAX)) * pixelWidthX;
+                Vector3 yOffset  = vectorY* ((float) rand()/(RAND_MAX)) * pixelWidthY;
+                auto samplePoint = (vectorTL+xOffset+yOffset) - center;
+
+                Ray ray = Ray(center, samplePoint.getNormalized());
+                auto tempColor = sampleRay(ray,scene);
+                colorMD = colorMD+tempColor;
+            }
+            colorMD = colorMD.div(pixelSampleCount);
+            return colorMD;
+        }
+        default: return LightIntensity::WHITE();
+
+
     }
-
-    Ray topLeft = Ray(center, vectorTL.getNormalized());
-    Ray topRight = Ray(center, vectorTR.getNormalized());
-    Ray bottomLeft = Ray(center, vectorBL.getNormalized());
-    Ray bottomRight = Ray(center, vectorBR.getNormalized());
-
-    auto colorTL = sampleRay(topLeft, scene);
-    auto colorTR = sampleRay(topRight, scene);
-    auto colorBL = sampleRay(bottomLeft, scene);
-    auto colorBR = sampleRay(bottomRight, scene);
-
-    if (maxDepth > 1) {
-        if (colorTL != colorMD) {
-            colorTL = doSampling(scene, center, (target + vectorTL / 2.0f), vectorX, vectorY, pixelWidthX / 2,
-                                 pixelWidthY / 2, 1, 0, colorMD, colorTL);
-        }
-        if (colorTR != colorMD) {
-            colorTR = doSampling(scene, center, (target + vectorTR / 2.0f), vectorX, vectorY, pixelWidthX / 2,
-                                 pixelWidthY / 2, 1, 1, colorMD, colorTR);
-        }
-        if (colorBL != colorMD) {
-            colorBL = doSampling(scene, center, (target + vectorBL / 2.0f), vectorX, vectorY, pixelWidthX / 2,
-                                 pixelWidthY / 2, 1, 2, colorMD, colorBL);
-        }
-        if (colorBR != colorMD) {
-            colorBR = doSampling(scene, center, (target + vectorBR / 2.0f), vectorX, vectorY, pixelWidthX / 2,
-                                 pixelWidthY / 2, 1, 3, colorMD, colorBR);
-        }
-    }
-    int R = ((colorMD.getR() + colorTL.getR()) / 2
-             + (colorMD.getR() + colorTR.getR()) / 2
-             + (colorMD.getR() + colorBL.getR()) / 2
-             + (colorMD.getR() + colorBR.getR()) / 2) / 4;
-    int G = ((colorMD.getG() + colorTL.getG()) / 2
-             + (colorMD.getG() + colorTR.getG()) / 2
-             + (colorMD.getG() + colorBL.getG()) / 2
-             + (colorMD.getG() + colorBR.getG()) / 2) / 4;
-    int B = ((colorMD.getB() + colorTL.getB()) / 2
-             + (colorMD.getB() + colorTR.getB()) / 2
-             + (colorMD.getB() + colorBL.getB()) / 2
-             + (colorMD.getB() + colorBR.getB()) / 2) / 4;
-    return {R, G, B};
 
 
 }
@@ -149,7 +171,8 @@ LightIntensity PerspectiveSampler::sampleRay(const Ray &ray, const Scene &scene,
         auto dnScalar = incomingRayDirection.multiplyScalar(normalVector);
 
         Vector3 refractedRayVector = (((incomingRayDirection - (normalVector * dnScalar)) * n_in) / n_out) -
-                                     (normalVector * std::sqrt(1 - (powf(n_in, 2) * (1 - powf(dnScalar, 2))) / powf(n_out, 2)));
+                                     (normalVector *
+                                      std::sqrt(1 - (powf(n_in, 2) * (1 - powf(dnScalar, 2))) / powf(n_out, 2)));
         auto refractedRay = Ray(nearestIntersection->getPoint(), refractedRayVector);
         return sampleRay(refractedRay, scene, rayDepth + 1, !insideStructure);
 
@@ -269,7 +292,8 @@ PerspectiveSampler::PerspectiveSampler(int maxDepth) : maxDepth(maxDepth) {}
 void PerspectiveSampler::sampleSpecularAndDiffuse(const Scene &scene, const Intersection &intersection,
                                                   const Vector3 &cameraPosition, LightIntensity &specular,
                                                   LightIntensity &diffuse) {
-    auto lightSources = scene.getLightSources();
+    std::vector<PointLight *> lightSources = std::vector<PointLight *>();
+    scene.getLightSources(lightSampleCount, lightSources);
     specular = LightIntensity::BLACK();
     diffuse = LightIntensity::BLACK();
     auto normal = intersection.getStructure().getNormalVector(intersection.getPoint());
@@ -317,4 +341,28 @@ int PerspectiveSampler::getMaxRayDepth() const {
 
 void PerspectiveSampler::setMaxRayDepth(int maxRayDepth) {
     PerspectiveSampler::maxRayDepth = maxRayDepth;
+}
+
+int PerspectiveSampler::getLightSampleCount() const {
+    return lightSampleCount;
+}
+
+void PerspectiveSampler::setLightSampleCount(int lightSampleCount) {
+    PerspectiveSampler::lightSampleCount = lightSampleCount;
+}
+
+int PerspectiveSampler::getPixelSampleCount() const {
+    return pixelSampleCount;
+}
+
+void PerspectiveSampler::setPixelSampleCount(int pixelSampleCount) {
+    PerspectiveSampler::pixelSampleCount = pixelSampleCount;
+}
+
+SamplingType PerspectiveSampler::getSamplingType() const {
+    return samplingType;
+}
+
+void PerspectiveSampler::setSamplingType(SamplingType samplingType) {
+    PerspectiveSampler::samplingType = samplingType;
 }

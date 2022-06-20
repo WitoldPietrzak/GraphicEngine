@@ -14,8 +14,8 @@ private:
     float distance, fovX, fovY;
     float lensRadius = 0;
     PerspectiveSampler sampler;
-    int depthSampleCount = 5;
-    int timeSampleCount = 8;
+    int depthSampleCount = 0;
+    int timeSampleCount = 0;
 
     Vector3 calculatePointOnLens(const Vector3 &vectorX, const Vector3 &vectorY);
 

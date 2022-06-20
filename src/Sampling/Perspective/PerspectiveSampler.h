@@ -9,13 +9,18 @@
 #include "../../Vector3/Vector3.h"
 #include "../../Scene/Scene.h"
 
+enum SamplingType {
+    AdaptiveSupersampling, DistributedSampling
+};
+
 class PerspectiveSampler {
 private:
     int maxDepth = 4;
     int maxRayDepth = 4;
+    int lightSampleCount = 100;
+    int pixelSampleCount = 4;
+    SamplingType samplingType = AdaptiveSupersampling;
 
-    LightIntensity sampleRefraction(const Scene &scene, const Intersection& intersection, const Vector3 origin);
-    LightIntensity sampleMirror(const Scene &scene, const Intersection& intersection, const Vector3 origin);
     void sampleSpecularAndDiffuse(const Scene &scene, const Intersection& intersection, const Vector3& cameraPosition, LightIntensity &specular, LightIntensity &diffuse);
 public:
     PerspectiveSampler();
@@ -41,6 +46,18 @@ public:
     int getMaxRayDepth() const;
 
     void setMaxRayDepth(int maxRayDepth);
+
+    int getLightSampleCount() const;
+
+    void setLightSampleCount(int lightSampleCount);
+
+    int getPixelSampleCount() const;
+
+    void setPixelSampleCount(int pixelSampleCount);
+
+    SamplingType getSamplingType() const;
+
+    void setSamplingType(SamplingType samplingType);
 
 };
 

@@ -11,11 +11,13 @@
 #include "../Light/Light.h"
 #include "../Light/PointLight/PointLight.h"
 #include "../Light/SurfaceLight/SurfaceLight.h"
+#include "../Light/DistributedLight/DistributedLight.h"
 
 class Scene {
 private:
     std::vector<Structure*> structures;
     std::vector<PointLight*> lightSources;
+    std::vector<DistributedLight*> distributedLightSources;
     LightIntensity backgroundColor = LightIntensity(0,0,0);
     LightIntensity ambient = LightIntensity(0,0,0);
 public:
@@ -58,7 +60,13 @@ public:
 
     void removeLightSource(SurfaceLight *light);
 
+    void addLightSource(DistributedLight *light);
+
+    void removeLightSource(DistributedLight *light);
+
     void increaseTime(float time);
+
+    void getLightSources(int lightSampleCount, std::vector<PointLight *> &lightSourcesCopy) const;
 };
 
 

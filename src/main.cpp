@@ -393,34 +393,37 @@ void distributedRTSoftShadows() {
 
     sphere->setColor(LightIntensity::RED());
 
-    //Dół
-//    auto *limitedPlane1 = new LimitedPlane(Vector3(-5,0,5),Vector3(10,0,0),Vector3(0,0,-10));
+
     auto *limitedPlane1 = new Plane(Vector3(0,1,0),Vector3(0,0,0));
     limitedPlane1->switchSide();
+
+    auto *limitedPlane2 =  new LimitedPlane(Vector3(-90,0,30),Vector3(180,0,0),Vector3(0,90,0));
 
 
     limitedPlane1->setColor(LightIntensity(255,255,255));
 
-    auto mat = sphere->getMaterial();
-    mat.setMaterialType(MaterialType::refraction);
-    mat.setRefractionIndex(1.83);
-//    sphere->setMaterial(mat);
+    std::string textureFileName = "background.bmp";
+    auto mat = limitedPlane2->getMaterial();
+    mat.setTexture(Image::load(textureFileName));
+    mat.setMaterialType(MaterialType::diffuse_texture);
+    limitedPlane2->setMaterial(mat);
 
     auto *light = new PointLight(LightIntensity(2550,2550,2550), Vector3(0,6,2));
-    auto *softLight = new SurfaceLight(Vector3(-0.5,5.5,2),Vector3(1,0,0),Vector3(0,1,0),10,LightIntensity(2550/100,2550/100,2550/100));
-//    light->setLinAt(0.5);
+    auto *softLight = new SurfaceLight(Vector3(-0.5,5.5,2),Vector3(1,0,0),Vector3(0,1,0),8,LightIntensity(2550/64,2550/64,2550/64));
+    auto *distributedLight = new DistributedLight(LightIntensity(2550,2550,2550),Vector3(-0.5,5.5,2),Vector3(1,0,0),Vector3(0,1,0));
 
     PerspectiveCamera perspectiveCamera = PerspectiveCamera(Vector3(0, 5, -6), Vector3(0, 0, 1).getNormalized(), Vector3(0, 1, 0),
                                                              1, 4, 4, PerspectiveSampler(1));
     Scene scene = Scene();
     scene.addStructure(sphere);
     scene.addStructure(limitedPlane1);
+    scene.addStructure(limitedPlane2);
 
     scene.setBackgroundColor(LightIntensity::BLACK());
     scene.setAmbient(LightIntensity(255,255,255));
     scene.addLightSource(softLight);
     auto test4 = perspectiveCamera.renderScene(scene,512,512);
-    test4.save("distributed-soft.bmp");
+    test4.save("shadow-soft-64-points.bmp");
 
 
 
@@ -521,8 +524,55 @@ void distributedRTMovement() {
 
 }
 
+void distributedRTAntiAliasing() {
 
+
+    Structure *sphere = new Sphere(Vector3(0,0.6,-2.2),0.6,LightIntensity::RED());
+    Structure *sphere2 = new Sphere(Vector3(7,1.5,4),1.5,LightIntensity::BLUE());
+    Structure *sphere3 = new Sphere(Vector3(15,1.5,7),1.5,LightIntensity::YELLOW());
+
+    sphere->setColor(LightIntensity::RED());
+
+
+    auto *limitedPlane1 = new Plane(Vector3(0,1,0),Vector3(0,0,0));
+    limitedPlane1->switchSide();
+
+    auto *limitedPlane2 =  new LimitedPlane(Vector3(-90,0,30),Vector3(180,0,0),Vector3(0,90,0));
+
+
+    limitedPlane1->setColor(LightIntensity(255,255,255));
+
+    std::string textureFileName = "background.bmp";
+    auto mat = limitedPlane2->getMaterial();
+    mat.setTexture(Image::load(textureFileName));
+    mat.setMaterialType(MaterialType::diffuse_texture);
+    limitedPlane2->setMaterial(mat);
+
+    auto *light = new PointLight(LightIntensity(2550,2550,2550), Vector3(-1.5,2,-3));
+
+    auto sampler = PerspectiveSampler(3);
+    sampler.setSamplingType(SamplingType::DistributedSampling);
+    sampler.setPixelSampleCount(2);
+    PerspectiveCamera perspectiveCamera = PerspectiveCamera(Vector3(0, 1, -3), Vector3(0, 0, 1).getNormalized(), Vector3(0, 1, 0),
+                                                            10, 40, 40, sampler);
+    perspectiveCamera.setLensRadius(0.04);
+    Scene scene = Scene();
+    scene.addStructure(sphere);
+    scene.addStructure(sphere2);
+    scene.addStructure(sphere3);
+    scene.addStructure(limitedPlane1);
+    scene.addStructure(limitedPlane2);
+
+    scene.setBackgroundColor(LightIntensity::BLACK());
+    scene.setAmbient(LightIntensity(255,255,255));
+    scene.addLightSource(light);
+    auto test4 = perspectiveCamera.renderScene(scene,512,512);
+    test4.save("antialiasing-distributed-samples-2.bmp");
+
+
+
+}
 int main() {
-    distributedRTMovement();
+    distributedRTAntiAliasing();
     return 0;
 }

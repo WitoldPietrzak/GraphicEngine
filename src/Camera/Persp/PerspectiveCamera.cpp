@@ -32,11 +32,16 @@ Image PerspectiveCamera::renderScene(Scene scene, int width, int height) {
         }
         for (int i = 0; i < image.getHeight(); i++) {
             for (int j = 0; j < image.getWidth(); j++) {
+                if(j==image.getWidth()-1){
+                    float debug = (i*image.getWidth()+(j*1.0f)+(l*image.getWidth()*image.getHeight()))/(1.0f * image.getHeight()*image.getWidth()* std::max(timeSampleCount, 1));
+                    std::cout<<(debug*100)<<"% \n";
+                }
+
                 Vector3 rayTargetPosition = imageTopLeft + (vectorX * pixelSizeX * j) - (vectorY * pixelSizeY * i) +
                                             (vectorX * pixelSizeX / 2.0f) - (vectorY * pixelSizeY / 2.0f);
 
                 LightIntensity color = LightIntensity(0, 0, 0);
-                if (lensRadius <= 0) {
+                if (lensRadius <= 0 || depthSampleCount <= 0) {
                     color = sampler.doSampling(scene, this->position, rayTargetPosition, vectorX, vectorY,
                                                pixelSizeX, pixelSizeY);
                 } else {
@@ -46,7 +51,7 @@ Image PerspectiveCamera::renderScene(Scene scene, int width, int height) {
                                                      pixelSizeY));
                     }
                 }
-                color = color.div((lensRadius > 0 ? (float)depthSampleCount : 1.0f));
+                color = color.div((lensRadius > 0 ? (float)std::max(depthSampleCount,1) : 1.0f));
                 l == 0 ? image.setPixel(j, i, color) : image.setPixel(j, i, image.getPixel(j, i).sum(color));
 
 
