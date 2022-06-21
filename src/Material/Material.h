@@ -15,6 +15,7 @@ enum MaterialType {
 class Material {
 private:
     float ambient, specular, diffuse, smoothness, refractionIndex;
+    float distributionIndex = 0.01;
     Image texture = Image(0,0);
     LightIntensity color = LightIntensity::BLACK();
     MaterialType materialType = MaterialType::diffuse_color;
@@ -56,6 +57,10 @@ public:
     const LightIntensity &getColor() const;
 
     void setColor(const LightIntensity &color);
+
+    float getDistributionIndex() const;
+
+    void setDistributionIndex(float distributionIndex);
 
 
 };

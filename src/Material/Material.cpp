@@ -81,3 +81,11 @@ Material::Material(float ambient, float specular, float diffuse, float smoothnes
                                                                                                            refractionIndex(refractionIndex) {
 
 }
+
+float Material::getDistributionIndex() const {
+    return distributionIndex;
+}
+
+void Material::setDistributionIndex(float distributionIndex) {
+    Material::distributionIndex = distributionIndex;
+}

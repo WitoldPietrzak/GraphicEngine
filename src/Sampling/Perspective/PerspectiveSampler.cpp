@@ -25,7 +25,7 @@ PerspectiveSampler::doSampling(const Scene &scene, const Vector3 &center, Vector
 
 
     switch (samplingType) {
-        case SamplingType::AdaptiveSupersampling: {
+        case PixelSamplingType::AdaptiveSupersampling: {
             auto vectorMD = target - center;
             auto vectorTL = (target - (vectorX * pixelWidthX / 2.0f) + (vectorY * pixelWidthY / 2.0f)) - center;
             auto vectorTR = (target + (vectorX * pixelWidthX / 2.0f) + (vectorY * pixelWidthY / 2.0f)) - center;
@@ -82,22 +82,23 @@ PerspectiveSampler::doSampling(const Scene &scene, const Vector3 &center, Vector
                      + (colorMD.getB() + colorBR.getB()) / 2) / 4;
             return {R, G, B};
         }
-        case SamplingType::DistributedSampling: {
-            auto colorMD = LightIntensity(0,0,0);
+        case PixelSamplingType::DistributedSampling: {
+            auto colorMD = LightIntensity(0, 0, 0);
             for (int i = 0; i < pixelSampleCount; i++) {
                 auto vectorTL = (target - (vectorX * pixelWidthX / 2.0f) + (vectorY * pixelWidthY / 2.0f));
-                Vector3 xOffset  = vectorX* ((float) rand()/(RAND_MAX)) * pixelWidthX;
-                Vector3 yOffset  = vectorY* ((float) rand()/(RAND_MAX)) * pixelWidthY;
-                auto samplePoint = (vectorTL+xOffset+yOffset) - center;
+                Vector3 xOffset = vectorX * ((float) rand() / (RAND_MAX)) * pixelWidthX;
+                Vector3 yOffset = vectorY * ((float) rand() / (RAND_MAX)) * pixelWidthY;
+                auto samplePoint = (vectorTL + xOffset + yOffset) - center;
 
                 Ray ray = Ray(center, samplePoint.getNormalized());
-                auto tempColor = sampleRay(ray,scene);
-                colorMD = colorMD+tempColor;
+                auto tempColor = sampleRay(ray, scene);
+                colorMD = colorMD + tempColor;
             }
             colorMD = colorMD.div(pixelSampleCount);
             return colorMD;
         }
-        default: return LightIntensity::WHITE();
+        default:
+            return LightIntensity::WHITE();
 
 
     }
@@ -149,10 +150,28 @@ LightIntensity PerspectiveSampler::sampleRay(const Ray &ray, const Scene &scene,
     }
     if (intersectionMaterial == MaterialType::mirror) {
         auto normalVector = nearestIntersection->getStructure().getNormalVector(nearestIntersection->getPoint());
-        auto reflectedRayVector =
-                ray.getDirection() - normalVector * 2 * (normalVector.multiplyScalar(ray.getDirection()));
-        auto reflectedRay = Ray(nearestIntersection->getPoint(), reflectedRayVector);
-        return sampleRay(reflectedRay, scene, rayDepth + 1, insideStructure);
+
+        if (!distributedReflections || reflectionSampleCount <= 0) {
+            auto reflectedRayVector =
+                    ray.getDirection() - normalVector * 2 * (normalVector.multiplyScalar(ray.getDirection()));
+            auto reflectedRay = Ray(nearestIntersection->getPoint(), reflectedRayVector);
+            return sampleRay(reflectedRay, scene, rayDepth + 1, insideStructure);
+
+        }
+
+        LightIntensity returnColor = LightIntensity(0, 0, 0);
+        for (int i = 0; i < reflectionSampleCount; i++) {
+            auto offsetNormalVector = generateOffsetVector(normalVector,
+                                                           nearestIntersection->getStructure().getMaterial().getDistributionIndex()).getNormalized();
+            auto reflectedRayVector = ray.getDirection() -
+                                      offsetNormalVector * 2 * (offsetNormalVector.multiplyScalar(ray.getDirection()));
+            auto reflectedRay = Ray(nearestIntersection->getPoint(), reflectedRayVector);
+            auto partialColor = sampleRay(reflectedRay, scene, rayDepth + 1, insideStructure);
+            returnColor = returnColor + partialColor;
+        }
+        returnColor = returnColor.div(reflectionSampleCount);
+        return returnColor;
+
 
     }
     if (intersectionMaterial == MaterialType::refraction) {
@@ -168,13 +187,30 @@ LightIntensity PerspectiveSampler::sampleRay(const Ray &ray, const Scene &scene,
             n_out = nearestIntersection->getStructure().getMaterial().getRefractionIndex();
             normalVector = -normalVector;
         }
-        auto dnScalar = incomingRayDirection.multiplyScalar(normalVector);
 
-        Vector3 refractedRayVector = (((incomingRayDirection - (normalVector * dnScalar)) * n_in) / n_out) -
-                                     (normalVector *
-                                      std::sqrt(1 - (powf(n_in, 2) * (1 - powf(dnScalar, 2))) / powf(n_out, 2)));
-        auto refractedRay = Ray(nearestIntersection->getPoint(), refractedRayVector);
-        return sampleRay(refractedRay, scene, rayDepth + 1, !insideStructure);
+        if (!distributedReflections || reflectionSampleCount <= 0) {
+            auto dnScalar = incomingRayDirection.multiplyScalar(normalVector);
+            Vector3 refractedRayVector = (((incomingRayDirection - (normalVector * dnScalar)) * n_in) / n_out) -
+                                         (normalVector *
+                                          std::sqrt(1 - (powf(n_in, 2) * (1 - powf(dnScalar, 2))) / powf(n_out, 2)));
+            auto refractedRay = Ray(nearestIntersection->getPoint(), refractedRayVector);
+            return sampleRay(refractedRay, scene, rayDepth + 1, !insideStructure);
+        }
+
+        LightIntensity returnColor = LightIntensity(0, 0, 0);
+        for (int i = 0; i < reflectionSampleCount; i++) {
+            auto offsetNormalVector = generateOffsetVector(normalVector,
+                                                           nearestIntersection->getStructure().getMaterial().getDistributionIndex()).getNormalized();
+            auto dnScalar = incomingRayDirection.multiplyScalar(offsetNormalVector);
+            Vector3 refractedRayVector = (((incomingRayDirection - (offsetNormalVector * dnScalar)) * n_in) / n_out) -
+                                         (offsetNormalVector *
+                                          std::sqrt(1 - (powf(n_in, 2) * (1 - powf(dnScalar, 2))) / powf(n_out, 2)));
+            auto refractedRay = Ray(nearestIntersection->getPoint(), refractedRayVector);
+            auto partialColor = sampleRay(refractedRay, scene, rayDepth + 1, !insideStructure);
+            returnColor = returnColor + partialColor;
+        }
+        returnColor = returnColor.div(reflectionSampleCount);
+        return returnColor;
 
     }
 }
@@ -326,13 +362,43 @@ void PerspectiveSampler::sampleSpecularAndDiffuse(const Scene &scene, const Inte
         }
 
         auto color = lightSource->getLightIntensity(intersection.getPoint());
-        auto specularColor = color.multiply(powf(std::max(normal.multiplyScalar(-bisectingVector), 0.0f),
-                                                 intersection.getStructure().getMaterial().getSmoothness()));
+
         auto diffuseColor = color.multiply(std::max(-normal.multiplyScalar(lightVector), 0.0f));
-        specular += specularColor;
         diffuse += diffuseColor;
+        if (!distributedReflections || reflectionSampleCount <= 0) {
+            auto specularColor = color.multiply(powf(std::max(normal.multiplyScalar(-bisectingVector), 0.0f),
+                                                     intersection.getStructure().getMaterial().getSmoothness()));
+            specular += specularColor;
+        } else {
+            auto specularColor = LightIntensity(0, 0, 0);
+            for (int i = 0; i < reflectionSampleCount; i++) {
+                auto offsetNormalVector = generateOffsetVector(normal,
+                                                               intersection.getStructure().getMaterial().getDistributionIndex()).getNormalized();
+                auto partialSpecularColor = color.multiply(
+                        powf(std::max(offsetNormalVector.multiplyScalar(-bisectingVector), 0.0f),
+                             intersection.getStructure().getMaterial().getSmoothness()));
+                specularColor = specularColor + partialSpecularColor;
+            }
+            specularColor = specularColor.div(reflectionSampleCount);
+            specular += specularColor;
+        }
+
 
     }
+}
+
+Vector3 PerspectiveSampler::generateOffsetVector(Vector3 vector, float size) {
+    Vector3 w = vector.getNormalized();
+    Vector3 t = Vector3(w.getX() + 1, w.getY(), w.getZ()).getNormalized();
+    Vector3 u = t.multiplyVector(w).getNormalized();
+    Vector3 v = w.multiplyVector(u).getNormalized();
+
+    Vector3 startXOffset = u * (-size / 2.0f);
+    Vector3 startYOffset = v * (-size / 2.0f);
+    Vector3 xOffset = (u * ((float) rand() / (RAND_MAX)) * size);
+    Vector3 yOffset = (v * ((float) rand() / (RAND_MAX)) * size);
+
+    return vector + xOffset + yOffset + startXOffset + startYOffset;
 }
 
 int PerspectiveSampler::getMaxRayDepth() const {
@@ -359,10 +425,26 @@ void PerspectiveSampler::setPixelSampleCount(int pixelSampleCount) {
     PerspectiveSampler::pixelSampleCount = pixelSampleCount;
 }
 
-SamplingType PerspectiveSampler::getSamplingType() const {
+PixelSamplingType PerspectiveSampler::getSamplingType() const {
     return samplingType;
 }
 
-void PerspectiveSampler::setSamplingType(SamplingType samplingType) {
+void PerspectiveSampler::setSamplingType(PixelSamplingType samplingType) {
     PerspectiveSampler::samplingType = samplingType;
+}
+
+bool PerspectiveSampler::isDistributedReflections() const {
+    return distributedReflections;
+}
+
+void PerspectiveSampler::setDistributedReflections(bool distributedReflections) {
+    PerspectiveSampler::distributedReflections = distributedReflections;
+}
+
+int PerspectiveSampler::getReflectionSampleCount() const {
+    return reflectionSampleCount;
+}
+
+void PerspectiveSampler::setReflectionSampleCount(int reflectionSampleCount) {
+    PerspectiveSampler::reflectionSampleCount = reflectionSampleCount;
 }

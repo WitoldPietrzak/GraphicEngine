@@ -9,7 +9,7 @@
 #include "../../Vector3/Vector3.h"
 #include "../../Scene/Scene.h"
 
-enum SamplingType {
+enum PixelSamplingType {
     AdaptiveSupersampling, DistributedSampling
 };
 
@@ -18,10 +18,14 @@ private:
     int maxDepth = 4;
     int maxRayDepth = 4;
     int lightSampleCount = 100;
+    PixelSamplingType samplingType = AdaptiveSupersampling;
     int pixelSampleCount = 4;
-    SamplingType samplingType = AdaptiveSupersampling;
+    bool distributedReflections = false;
+    int reflectionSampleCount = 0;
 
     void sampleSpecularAndDiffuse(const Scene &scene, const Intersection& intersection, const Vector3& cameraPosition, LightIntensity &specular, LightIntensity &diffuse);
+
+    Vector3 generateOffsetVector(Vector3 vector, float size);
 public:
     PerspectiveSampler();
 
@@ -55,10 +59,17 @@ public:
 
     void setPixelSampleCount(int pixelSampleCount);
 
-    SamplingType getSamplingType() const;
+    PixelSamplingType getSamplingType() const;
 
-    void setSamplingType(SamplingType samplingType);
+    void setSamplingType(PixelSamplingType samplingType);
 
+    bool isDistributedReflections() const;
+
+    void setDistributedReflections(bool distributedReflections);
+
+    int getReflectionSampleCount() const;
+
+    void setReflectionSampleCount(int reflectionSampleCount);
 };
 
 

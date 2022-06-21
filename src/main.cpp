@@ -298,7 +298,7 @@ void task5() {
     scene.setAmbient(LightIntensity(255,255,255));
     scene.addLightSource(light);
 //    auto test3 = perspectiveCamera.renderScene(scene,500,500);
-    auto test4 = perspectiveCamera2.renderScene(scene,1024,1024);
+    auto test4 = perspectiveCamera2.renderScene(scene,512,512);
 //    test3.save("perspective-custom.bmp");
     test4.save("perspective-custom-angle-texture-5.bmp");
 
@@ -311,6 +311,7 @@ void task6() {
 
     Structure *sphere2 = new Sphere(Vector3(-1.3,1.5,1.5),1.5,LightIntensity::RED());
     Structure *sphere = new Sphere(Vector3(2,1.5,1),1.5,LightIntensity::RED());
+    Structure *sphere3 = new Sphere(Vector3(3,5,4),2,LightIntensity::RED());
 
     sphere->setColor(LightIntensity::RED());
     sphere2->setColor(LightIntensity::RED());
@@ -354,18 +355,32 @@ void task6() {
     auto mat2 = sphere2->getMaterial();
     mat2.setMaterialType(MaterialType::mirror);
 
-//    sphere->setMaterial(mat);
-//    sphere2->setMaterial(mat2);
+    auto mat3 = sphere3->getMaterial();
+    mat3.setSmoothness(2048);
 
-//    auto *light = new PointLight(LightIntensity(2550,2550,2550), Vector3(0,10,0));
-    auto *softLight = new SurfaceLight(Vector3(-0.5,10.1,-0.5),Vector3(1,0,0),Vector3(0,0,1),4,LightIntensity(155,155,155));
-//    light->setLinAt(0.5);
+
+    mat.setDistributionIndex(0.1);
+    mat2.setDistributionIndex(0.1);
+    mat3.setDistributionIndex(0.1);
+
+    sphere->setMaterial(mat);
+    sphere2->setMaterial(mat2);
+    sphere3->setMaterial(mat3);
+
+    auto *light = new PointLight(LightIntensity(2550,2550,2550), Vector3(0,10,0));
+//    auto *softLight = new SurfaceLight(Vector3(-0.5,10.1,-0.5),Vector3(1,0,0),Vector3(0,0,1),4,LightIntensity(155,155,155));
+    light->setLinAt(0.5);
+
+    PerspectiveSampler sampler = PerspectiveSampler(1);
+    sampler.setDistributedReflections(true);
+    sampler.setReflectionSampleCount(16);
 
     PerspectiveCamera perspectiveCamera2 = PerspectiveCamera(Vector3(0, 5, -4.5), Vector3(0, 0, 1).getNormalized(), Vector3(0, 1, 0),
-                                                             1, 4, 4, PerspectiveSampler(1));
+                                                             1, 4, 4, sampler);
     Scene scene = Scene();
     scene.addStructure(sphere);
     scene.addStructure(sphere2);
+    scene.addStructure(sphere3);
     scene.addStructure(limitedPlane1);
     scene.addStructure(limitedPlane2_1);
     scene.addStructure(limitedPlane2_2);
@@ -378,9 +393,9 @@ void task6() {
 
     scene.setBackgroundColor(LightIntensity::WHITE());
     scene.setAmbient(LightIntensity(255,255,255));
-    scene.addLightSource(softLight);
-    auto test4 = perspectiveCamera2.renderScene(scene,1024,1024);
-    test4.save("task6-complete-soft.bmp");
+    scene.addLightSource(light);
+    auto test4 = perspectiveCamera2.renderScene(scene,512,512);
+    test4.save("reflection-distributed-16-samples-index-0.1.bmp");
 
 
 
@@ -551,7 +566,7 @@ void distributedRTAntiAliasing() {
     auto *light = new PointLight(LightIntensity(2550,2550,2550), Vector3(-1.5,2,-3));
 
     auto sampler = PerspectiveSampler(3);
-    sampler.setSamplingType(SamplingType::DistributedSampling);
+    sampler.setSamplingType(PixelSamplingType::DistributedSampling);
     sampler.setPixelSampleCount(2);
     PerspectiveCamera perspectiveCamera = PerspectiveCamera(Vector3(0, 1, -3), Vector3(0, 0, 1).getNormalized(), Vector3(0, 1, 0),
                                                             10, 40, 40, sampler);
@@ -573,6 +588,6 @@ void distributedRTAntiAliasing() {
 
 }
 int main() {
-    distributedRTAntiAliasing();
+    task6();
     return 0;
 }
